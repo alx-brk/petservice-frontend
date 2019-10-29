@@ -12,54 +12,61 @@
             class="pointer"
         >
           <v-list-item>
-            <v-list-item-avatar>
-              <img src="https://randomuser.me/api/portraits/women/81.jpg">
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>Маша Пупкина</v-list-item-title>
-              <v-list-item-subtitle>masha.pupkina@gmail.com</v-list-item-subtitle>
-            </v-list-item-content>
+            <v-tooltip top>
+              <template #activator="{ on }">
+                <span v-on="on">
+                  <v-list-item-avatar>
+                    <img src="https://randomuser.me/api/portraits/women/81.jpg">
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>Маша Пупкина</v-list-item-title>
+                    <v-list-item-subtitle>masha.pupkina@gmail.com</v-list-item-subtitle>
+                  </v-list-item-content>
+                </span>
+              </template>
+              <span>Редактировать профиль</span>
+            </v-tooltip>
           </v-list-item>
         </router-link>
-          <v-divider/>
-          <v-subheader>Меню клиента</v-subheader>
-          <v-list dense flat nav>
-              <v-list-item
-                  v-for="item in clientMenu"
-                  :key="item.title"
-                  :to="item.url"
-                  :color="item.url === $route.path ? 'primary' : ''"
-              >
-                  <v-list-item-icon>
-                      <v-icon v-text="item.icon"/>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                      <v-list-item-title v-text="item.title"/>
-                  </v-list-item-content>
-              </v-list-item>
-          </v-list>
-          <v-divider/>
-          <v-subheader>Меню петситтера</v-subheader>
-          <v-list dense flat nav>
-              <v-list-item
-                  v-for="item in petsitterMenu"
-                  :key="item.title"
-                  :to="item.url"
-                  :color="item.url === $route.path ? 'primary' : ''"
-              >
-                  <v-list-item-icon>
-                      <v-icon v-text="item.icon"/>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                      <v-list-item-title v-text="item.title"/>
-                  </v-list-item-content>
-              </v-list-item>
-          </v-list>
+        <v-divider/>
+        <v-subheader>Меню клиента</v-subheader>
+        <v-list dense flat nav>
+          <v-list-item
+              v-for="item in clientMenu"
+              :key="item.title"
+              :to="item.url"
+              :color="item.url === $route.path ? 'primary' : ''"
+          >
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"/>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"/>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+        <v-divider/>
+        <v-subheader>Меню петситтера</v-subheader>
+        <v-list dense flat nav>
+          <v-list-item
+              v-for="item in petsitterMenu"
+              :key="item.title"
+              :to="item.url"
+              :color="item.url === $route.path ? 'primary' : ''"
+          >
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"/>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"/>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
       </v-navigation-drawer>
     </v-card>
     <v-app-bar app>
       <v-app-bar-nav-icon
-        @click.stop="drawer = !drawer"
+          @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
       <v-toolbar flat>
         <v-toolbar-title>Petservice</v-toolbar-title>
