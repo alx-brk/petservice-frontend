@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from "vue-router";
 import HelloWorld from "../components/HelloWorld";
+import Profile from "../components/profile/Profile";
 
 Vue.use(VueRouter)
 
@@ -39,7 +40,7 @@ export default new VueRouter({
         {
             path: '/profile',
             name: 'profile',
-            component: HelloWorld
+            component: Profile
         },
     ],
     base: process.env.BASE_URL,

@@ -2,7 +2,7 @@
   <v-app>
     <v-card>
       <v-navigation-drawer
-          permanent
+          v-model="drawer"
           overflow
           app
       >
@@ -58,6 +58,9 @@
       </v-navigation-drawer>
     </v-card>
     <v-app-bar app>
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
       <v-toolbar flat>
         <v-toolbar-title>Petservice</v-toolbar-title>
         <v-spacer/>
@@ -87,6 +90,7 @@
         name: 'App',
         components: {},
         data: () => ({
+            drawer: true,
             links: [
                 {title: 'Выйти', icon: 'mdi-exit-to-app', 'url': '/'}
             ],
