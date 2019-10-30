@@ -1,12 +1,24 @@
 <template>
   <v-container>
-    <v-layout align="center" justify="start" class="ma-3 flex-wrap">
-      <v-flex>
+    <v-layout align="center" justify="start" class="ma-3 flex-wrap flex-row">
+     <v-flex>
         <v-avatar>
           <img :src="profile.avatar">
         </v-avatar>
       </v-flex>
+      <v-flex class="d-flex pr-12">
+        <v-file-input
+          accept="image/png, image/jpeg, image/bmp"
+          placeholder="Выбрать аватар"
+          prepend-icon="mdi-camera"
+          justify="start"
+          align="start"
+          flat
+          solo
+        />
+      </v-flex>
       <v-flex align="center" class="text--secondary ma-3" v-text="profile.email"/>
+      <v-spacer/>
       <v-flex>
         <v-tooltip bottom>
           <template #activator="{ on }">
@@ -21,7 +33,7 @@
               ></v-rating>
             </span>
           </template>
-          <span v-text="'Рейтинг петситтера ' + profile.rating"/>
+          <span v-text="'Рейтинг петситтера ' + profile.rating"></span>
         </v-tooltip>
       </v-flex>
     </v-layout>
@@ -140,8 +152,7 @@
               </tbody>
             </v-simple-table>
             <v-btn
-                class="ma-2"
-                block
+                class="ma-3"
                 @click="addService"
                 color="primary"
             >
@@ -176,8 +187,8 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-card
-                v-for="item in profile.feedback"
-                :key="item"
+                v-for="(item, index) in profile.feedback"
+                :key="index"
                 class="ma-4 elevation-5"
             >
               <v-card-text class="headline" v-text="item.text"/>
@@ -205,6 +216,16 @@
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+    </v-row>
+    <v-row>
+      <v-btn
+          class="ma-4"
+          @click="saveChanges"
+          color="primary"
+      >
+        <v-icon left>mdi-content-save-move</v-icon>
+        Сохранить изменения
+      </v-btn>
     </v-row>
   </v-container>
 </template>
@@ -241,21 +262,32 @@
                     }
                 ]
             },
-            cities: ["Санкт-Петербург", "Москва"],
-            animals: ["Собаки", "Кошки", "Рыбки", "Рептилии", "Птицы", "Грызуны", "Насекомые", "Другое"],
-            services: ["Передержка", "Выгул", "Кормление", "Дрессировка", "Стрижка", "Уход за больным животным"],
-            units: ["руб/час", "руб/день", "руб"]
         }),
         computed: {
             notNullCatalog() {
                 return this.profile.catalog.filter(
                     item => (item.service != null && item.price != null)
                 )
+            },
+            cities() {
+                return this.$store.getters.cities
+            },
+            animals() {
+                return this.$store.getters.animals
+            },
+            services() {
+                return this.$store.getters.services
+            },
+            units() {
+                return this.$store.getters.units
             }
         },
         methods: {
             addService() {
                 this.profile.catalog.push({service: null, price: null, units: null})
+            },
+            saveChanges(){
+            //    TODO implement method to save changes
             }
         }
     }

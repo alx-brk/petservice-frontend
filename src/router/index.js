@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from "vue-router";
 import HelloWorld from "../components/HelloWorld";
 import Profile from "../components/profile/Profile";
+import NewOrder from "../components/newOrder/NewOrder";
 
 Vue.use(VueRouter)
 
@@ -20,7 +21,7 @@ export default new VueRouter({
         {
             path: '/new-order',
             name: 'new-order',
-            component: HelloWorld
+            component: NewOrder
         },
         {
             path: '/petsitters-search',
