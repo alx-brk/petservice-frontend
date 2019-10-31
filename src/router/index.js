@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import HelloWorld from "../components/HelloWorld";
 import Profile from "../components/profile/Profile";
 import NewOrder from "../components/newOrder/NewOrder";
+import ClientOrders from "../components/clientOrders/ClientOrders";
 
 Vue.use(VueRouter)
 
@@ -16,7 +17,7 @@ export default new VueRouter({
         {
             path: '/client-orders',
             name: 'client-orders',
-            component: HelloWorld
+            component: ClientOrders
         },
         {
             path: '/new-order',

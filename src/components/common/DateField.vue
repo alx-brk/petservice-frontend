@@ -1,20 +1,22 @@
 <template>
   <div>
     <v-text-field
-        #activator="{ on }"
         v-model="date"
         :label="label"
+        @click="showPicker=true"
+        :prepend-icon="icon"
+        class="pr-3"
         readonly
-        v-on="on"
     ></v-text-field>
     <v-date-picker
+        v-show="showPicker"
         v-model="date"
-        no-title
+        locale="ru"
+        first-day-of-week="1"
+        @input="updateDate"
         scrollable
+        landscape
     >
-      <v-spacer></v-spacer>
-      <v-btn text color="primary">OK</v-btn>
-      <v-btn text color="primary">Отмена</v-btn>
     </v-date-picker>
   </div>
 </template>
@@ -23,8 +25,19 @@
     export default {
         name: "DateField",
         props: {
-            date: null,
-            label: null
+            label: String,
+            value: String,
+            icon: String
+        },
+        data: () => ({
+            showPicker: false,
+            date: null
+        }),
+        methods: {
+            updateDate() {
+                this.showPicker = false;
+                this.$emit('input', this.date)
+            }
         }
     }
 </script>
