@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="d-flex flex-wrap">
     <v-chip
         v-for="item in allItems"
         :key="item"
         class="ma-2"
         :color="chipColor(item)"
         outlined
+        dense
     >
       <v-icon
           left

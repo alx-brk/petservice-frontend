@@ -85,7 +85,7 @@
       </v-toolbar>
     </v-app-bar>
 
-    <v-content>
+    <v-content class="justify-center">
       <router-view></router-view>
     </v-content>
   </v-app>

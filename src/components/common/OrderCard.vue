@@ -1,22 +1,19 @@
 <template>
-  <v-container>
-    <v-card class="flex-column">
-      <v-layout class="flex-row justify-space-around flex-wrap">
-        <v-flex class="d-flex align-center ma-3">
+    <v-card class="flex-column max-width-1000">
+      <div class="justify-space-between flex-wrap flex-row d-flex">
+        <div class="ma-3 mt-0 flex-row d-flex align-center">
           <span class="text--secondary">Клиент:</span>
           <person-card
-              :avatar="order.client.avatar"
-              :name="order.client.name"
+              :person="order.client"
           ></person-card>
-        </v-flex>
-        <v-flex class="d-flex align-center ma-3">
+        </div>
+        <div class="ma-3 mt-0 flex-row d-flex align-center">
           <span class="text--secondary">Петситтер:</span>
           <person-card
-              :avatar="order.petsitter.avatar"
-              :name="order.petsitter.name"
+              :person="order.petsitter"
           ></person-card>
-        </v-flex>
-        <v-flex class="d-flex align-center ma-3">
+        </div>
+        <div class="ma-3 mt-0 flex-row d-flex align-center">
           <span class="text--secondary">Статус:</span>
           <v-alert
               class="ma-3"
@@ -27,21 +24,43 @@
               :color="statusColor"
           >{{ order.status }}
           </v-alert>
-        </v-flex>
-      </v-layout>
-      <v-layout class="flex-row justify-space-around flex-wrap">
-        <v-flex class="d-flex align-center ma-3">
+        </div>
+      </div>
+      <div class="justify-space-between flex-wrap flex-row d-flex">
+        <div class="d-flex flex-column ma-3 mt-0 max-width-300">
           <span class="text--secondary">Животные</span>
-          <v-flex class="d-flex flex-wrap">
-            <readonly-chip-group
+          <readonly-chip-group
               :all-items="animals"
               :selected-items="order.animals"
-            ></readonly-chip-group>
-          </v-flex>
-        </v-flex>
-      </v-layout>
+          ></readonly-chip-group>
+        </div>
+        <div class="d-flex flex-column ma-3 mt-0 max-width-300">
+          <span class="text--secondary">Услуги</span>
+          <readonly-chip-group
+              :all-items="services"
+              :selected-items="order.services"
+          ></readonly-chip-group>
+        </div>
+        <div class="d-flex flex-column ma-3 mt-0 max-width-300">
+          <span class="text--secondary">Описание</span>
+          <span>{{ order.description }}</span>
+        </div>
+      </div>
+      <div class="justify-space-between flex-wrap flex-row d-flex">
+        <div class="d-flex ma-3 mt-0 align-center">
+          <span class="text--secondary">Даты:</span>
+          <span class="ml-3">с</span>
+          <v-chip outlined dense class="ma-2" color="primary">{{ order.startDate }}</v-chip>
+          <span class="ml-3">по</span>
+          <v-chip v-if="order.endDate != null" outlined dense class="ma-2" color="primary">{{order.endDate }}</v-chip>
+          <v-chip v-else outlined dense class="ma-2" color="primary">Не указано</v-chip>
+        </div>
+        <div class="d-flex align-center ma-3 mt-0">
+          <span class="text--secondary">Дата создания:</span>
+          <v-chip outlined dense class="ma-2" color="primary">{{order.creationDate }}</v-chip>
+        </div>
+      </div>
     </v-card>
-  </v-container>
 </template>
 
 <script>
@@ -70,6 +89,9 @@
             },
             animals() {
                 return this.$store.getters.animals
+            },
+            services() {
+                return this.$store.getters.services
             }
 
         },
@@ -77,4 +99,11 @@
 </script>
 
 <style scoped>
+  .max-width-1000 {
+    max-width: 1000px;
+  }
+
+  .max-width-300 {
+    max-width: 300px;
+  }
 </style>
