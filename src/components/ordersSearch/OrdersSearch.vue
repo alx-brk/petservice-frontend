@@ -1,12 +1,13 @@
 <template>
   <v-container>
+    <filter-drawer></filter-drawer>
     <div class="flex-wrap ma-3 flex-column align-start">
       <order-card
           v-for="(order, index) in orders"
           :key="index"
           :order="order"
-          :petsitter-animals="animals"
-          :petsitter-services="services"
+          :petsitter-animals="[]"
+          :petsitter-services="[]"
       ></order-card>
     </div>
   </v-container>
@@ -14,13 +15,16 @@
 
 <script>
     import OrderCard from "../common/OrderCard";
+    import FilterDrawer from "../common/FilterDrawer";
 
     export default {
-        name: "ClientOrders",
+        name: "OrdersSearch",
         components: {
-            'order-card': OrderCard
+            'order-card': OrderCard,
+            'filter-drawer': FilterDrawer
         },
         data: () => ({
+            drawer: true,
             orders: [
                 {
                     client: {
@@ -37,15 +41,7 @@
                     creationDate: "2019-10-30"
                 }
             ]
-        }),
-        computed: {
-            animals() {
-                return this.$store.getters.animals
-            },
-            services() {
-                return this.$store.getters.services
-            }
-        }
+        })
     }
 </script>
 

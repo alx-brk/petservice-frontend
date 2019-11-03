@@ -3,6 +3,7 @@
     <v-chip
         v-for="item in allItems"
         :key="item"
+        v-show="showChip(item)"
         class="ma-2"
         :color="chipColor(item)"
         outlined
@@ -23,15 +24,22 @@
     export default {
         name: "ReadonlyChipGroup",
         props: {
-          allItems: Array,
-          selectedItems: Array
+            allItems: Array,
+            selectedItems: Array,
+            displayInactive: {
+                type: Boolean,
+                default: true
+            }
         },
         methods: {
             isSelected(item) {
                 return this.selectedItems.includes(item)
             },
-            chipColor(animal) {
-                return this.isSelected(animal) ? 'primary' : 'default'
+            chipColor(item) {
+                return this.isSelected(item) ? 'primary' : 'default'
+            },
+            showChip(item) {
+                return this.displayInactive || this.isSelected(item)
             }
         }
     }

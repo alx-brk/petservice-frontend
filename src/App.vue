@@ -64,7 +64,7 @@
         </v-list>
       </v-navigation-drawer>
     </v-card>
-    <v-app-bar app>
+    <v-app-bar app clipped-right>
       <v-app-bar-nav-icon
           @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>

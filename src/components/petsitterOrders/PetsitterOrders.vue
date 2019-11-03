@@ -5,6 +5,8 @@
           v-for="(order, index) in orders"
           :key="index"
           :order="order"
+          :petsitter-animals="order.petsitter.animals"
+          :petsitter-services="order.petsitter.services"
       ></order-card>
     </v-layout>
   </v-container>
@@ -27,7 +29,9 @@
                     },
                     petsitter: {
                         avatar: "https://randomuser.me/api/portraits/women/81.jpg",
-                        name: "Маша Пупкина"
+                        name: "Маша Пупкина",
+                        animals: ["Собаки", "Кошки"],
+                        services: ["Выгул"]
                     },
                     status: "Обработан",
                     animals: ["Собаки", "Кошки"],

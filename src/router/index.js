@@ -5,6 +5,7 @@ import Profile from "../components/profile/Profile";
 import NewOrder from "../components/newOrder/NewOrder";
 import ClientOrders from "../components/clientOrders/ClientOrders";
 import PetsitterOrders from "../components/petsitterOrders/PetsitterOrders";
+import OrdersSearch from "../components/ordersSearch/OrdersSearch";
 
 Vue.use(VueRouter)
 
@@ -38,7 +39,7 @@ export default new VueRouter({
         {
             path: '/orders-search',
             name: 'orders-search',
-            component: HelloWorld
+            component: OrdersSearch
         },
         {
             path: '/profile',
