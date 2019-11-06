@@ -1,13 +1,15 @@
 <template>
   <v-container>
-    <filter-drawer></filter-drawer>
+    <filter-drawer
+      type="orderSearch"
+      v-model="filterOptions"
+    ></filter-drawer>
     <div class="flex-wrap ma-3 flex-column align-start">
       <order-card
           v-for="(order, index) in orders"
           :key="index"
           :order="order"
-          :petsitter-animals="[]"
-          :petsitter-services="[]"
+          :selected-items-container="filterOptions"
       ></order-card>
     </div>
   </v-container>
@@ -40,7 +42,15 @@
                     endDate: null,
                     creationDate: "2019-10-30"
                 }
-            ]
+            ],
+            filterOptions: {
+                city: null,
+                animals: [],
+                services: [],
+                startDate: null,
+                endDate: null,
+                creationDate: null
+            }
         })
     }
 </script>

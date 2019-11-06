@@ -5,8 +5,7 @@
           v-for="(order, index) in orders"
           :key="index"
           :order="order"
-          :petsitter-animals="animals"
-          :petsitter-services="services"
+          :selected-items-container="order.petsitter"
       ></order-card>
     </div>
   </v-container>
@@ -44,7 +43,9 @@
             },
             services() {
                 return this.$store.getters.services
-            }
+            },
+        },
+        methods: {
         }
     }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex flex-wrap">
     <v-chip
-        v-for="item in allItems"
-        :key="item"
+        v-for="(item, index) in allItems"
+        :key="index"
         v-show="showChip(item)"
         class="ma-2"
         :color="chipColor(item)"
@@ -15,7 +15,7 @@
           v-if="isSelected(item)"
       >mdi-checkbox-marked-circle-outline
       </v-icon>
-      {{ item }}
+      {{ mappedItem(item) }}
     </v-chip>
   </div>
 </template>
@@ -33,13 +33,29 @@
         },
         methods: {
             isSelected(item) {
-                return this.selectedItems.includes(item)
+                if (this.areObjects(this.selectedItems)) {
+                    return this.mappedServices(this.selectedItems).includes(item)
+                }
+                else {
+                    return this.selectedItems.includes(item)
+                }
             },
             chipColor(item) {
                 return this.isSelected(item) ? 'primary' : 'default'
             },
             showChip(item) {
                 return this.displayInactive || this.isSelected(item)
+            },
+            areObjects(items) {
+                return items.length > 0 && typeof items[0] === 'object'
+            },
+            mappedServices(items) {
+                return items.map(item => item.service)
+            },
+            mappedItem(item) {
+                return (typeof item === 'object') ?
+                    item.service + ' - ' + item.price + ' ' + item.units :
+                    item
             }
         }
     }

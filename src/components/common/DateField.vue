@@ -15,6 +15,7 @@
         first-day-of-week="1"
         @input="updateDate"
         scrollable
+        :no-title="noTitle"
         landscape
     >
     </v-date-picker>
@@ -27,7 +28,12 @@
         props: {
             label: String,
             value: String,
-            icon: String
+            icon: String,
+            noTitle: {
+                type: Boolean,
+                default: false
+            }
+
         },
         data: () => ({
             showPicker: false,

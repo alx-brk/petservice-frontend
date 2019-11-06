@@ -5,8 +5,7 @@
           v-for="(order, index) in orders"
           :key="index"
           :order="order"
-          :petsitter-animals="order.petsitter.animals"
-          :petsitter-services="order.petsitter.services"
+          :selected-items-container="order.petsitter"
       ></order-card>
     </v-layout>
   </v-container>

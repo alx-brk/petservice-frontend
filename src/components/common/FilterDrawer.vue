@@ -30,6 +30,7 @@
           <v-autocomplete
               :items="cities"
               v-model="filterOptions.city"
+              @input="updateFilterOptions"
               label="Город"
           ></v-autocomplete>
         </v-list-item-content>
@@ -43,7 +44,11 @@
           <v-autocomplete
               :items="animals"
               v-model="filterOptions.animals"
+              @input="updateFilterOptions"
               label="Животные"
+              chips
+              multiple
+              clearable
           ></v-autocomplete>
         </v-list-item-content>
       </v-list-item>
@@ -56,8 +61,54 @@
           <v-autocomplete
               :items="services"
               v-model="filterOptions.services"
-              label="Животные"
+              @input="updateFilterOptions"
+              label="Услуги"
+              chips
+              multiple
+              clearable
           ></v-autocomplete>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item link v-if="showDates">
+        <v-list-item-icon>
+          <v-icon>mdi-calendar-today</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <date-field
+              label="Дата начала"
+              v-model="filterOptions.startDate"
+              @input="updateFilterOptions"
+              :no-title="true"
+          ></date-field>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item link v-if="showDates">
+        <v-list-item-icon>
+          <v-icon>mdi-calendar</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <date-field
+              label="Дата окончания"
+              v-model="filterOptions.endDate"
+              @input="updateFilterOptions"
+              :no-title="true"
+          ></date-field>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item link v-if="showDates">
+        <v-list-item-icon>
+          <v-icon>mdi-calendar-edit</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <date-field
+              label="Дата создания"
+              v-model="filterOptions.creationDate"
+              @input="updateFilterOptions"
+              :no-title="true"
+          ></date-field>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -65,15 +116,30 @@
 </template>
 
 <script>
+    import DateField from "./DateField";
+
     export default {
         name: "FilterDrawer",
+        props: {
+            type: {
+                type: String,
+                required: true
+            },
+            value: Object
+        },
+        components: {
+            'date-field': DateField
+        },
         data: () => ({
             drawer: true,
             mini: true,
             filterOptions: {
                 city: null,
                 animals: [],
-                services: []
+                services: [],
+                startDate: null,
+                endDate: null,
+                creationDate: null
             }
         }),
         computed: {
@@ -86,8 +152,15 @@
             services() {
                 return this.$store.getters.services
             },
+            showDates() {
+                return this.type === 'orderSearch'
+            }
         },
-
+        methods: {
+            updateFilterOptions() {
+                this.$emit('input', this.filterOptions)
+            }
+        }
     }
 </script>
 

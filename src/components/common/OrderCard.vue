@@ -30,17 +30,15 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-wrap flex-column pa-3 mt-0 ml-3">
         <span class="text--secondary">Животные</span>
         <readonly-chip-group
-            :all-items="this.petsitterAnimals"
-            :selected-items="order.animals"
-            :display-inactive="false"
+            :all-items="order.animals"
+            :selected-items="selectedAnimals"
         ></readonly-chip-group>
       </v-col>
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="this.petsitterServices"
-            :selected-items="order.services"
-            :display-inactive="false"
+            :all-items="order.services"
+            :selected-items="selectedServices"
         ></readonly-chip-group>
       </v-col>
       <v-col xl="7" lg="7" md="7" sm="12" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
@@ -77,14 +75,7 @@
         name: "OrderCard",
         props: {
             order: Object,
-            petsitterAnimals: {
-                type: Array,
-                required: true
-            },
-            petsitterServices: {
-                type: Array,
-                required: true
-            }
+            selectedItemsContainer: Object
         },
         components: {
             'person-card': PersonCard,
@@ -106,6 +97,16 @@
             },
             services() {
                 return this.$store.getters.services
+            },
+            selectedAnimals() {
+                return (this.selectedItemsContainer != null && this.selectedItemsContainer.animals != null) ?
+                      this.selectedItemsContainer.animals :
+                      []
+            },
+            selectedServices() {
+                return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
+                    this.selectedItemsContainer.services :
+                    []
             }
 
         },
@@ -117,7 +118,4 @@
     max-width: 1000px;
   }
 
-  .max-width-300 {
-    max-width: 300px;
-  }
 </style>
