@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <filter-drawer
-        type="petsittersSearch"
+        type="petsitterSearch"
         v-model="filterOptions"
     ></filter-drawer>
     <petsitter-card

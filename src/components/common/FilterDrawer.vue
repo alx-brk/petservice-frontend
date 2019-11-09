@@ -111,6 +111,24 @@
           ></date-field>
         </v-list-item-content>
       </v-list-item>
+
+      <v-list-item link v-if="showRating">
+        <v-list-item-icon>
+          <v-icon>mdi-account-star</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <div class="justify-space-around d-flex flex-row flex-nowrap align-center">
+            <v-rating
+                v-model="filterOptions.rating"
+                empty-icon="mdi-star-outline"
+                half-icon="mdi-star-half"
+                full-icon="mdi-star"
+                half-increments
+            ></v-rating>
+            <span>{{filterOptions.rating}}</span>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -139,7 +157,8 @@
                 services: [],
                 startDate: null,
                 endDate: null,
-                creationDate: null
+                creationDate: null,
+                rating: null
             }
         }),
         computed: {
@@ -154,6 +173,9 @@
             },
             showDates() {
                 return this.type === 'orderSearch'
+            },
+            showRating() {
+                return this.type === 'petsitterSearch'
             }
         },
         methods: {

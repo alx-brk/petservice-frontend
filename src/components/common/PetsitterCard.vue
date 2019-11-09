@@ -1,5 +1,5 @@
 <template>
-  <v-card class="flex-column max-width-1000">
+  <v-card class="flex-column max-width-1000 ma-3">
     <div class="justify-space-between flex-wrap flex-row d-flex">
       <div class="pa-3 mt-0 flex-row d-flex align-center">
         <span class="text--secondary">Петситтер:</span>

@@ -1,20 +1,20 @@
 <template>
   <v-container>
     <v-layout align="center" justify="start" class="ma-3 flex-wrap flex-row">
-     <v-flex>
+      <v-flex>
         <v-avatar>
           <img :src="profile.avatar">
         </v-avatar>
       </v-flex>
       <v-flex class="d-flex pr-12">
         <v-file-input
-          accept="image/png, image/jpeg, image/bmp"
-          placeholder="Выбрать аватар"
-          prepend-icon="mdi-camera"
-          justify="start"
-          align="start"
-          flat
-          solo
+            accept="image/png, image/jpeg, image/bmp"
+            placeholder="Выбрать аватар"
+            prepend-icon="mdi-camera"
+            justify="start"
+            align="start"
+            flat
+            solo
         />
       </v-flex>
       <v-flex align="center" class="text--secondary ma-3" v-text="profile.email"/>
@@ -70,11 +70,11 @@
           <v-expansion-panel-header>
             <v-row no-gutters>
               <v-col cols="4">Город</v-col>
-              <v-col cols="8" class="text--secondary" v-text="profile.city"></v-col>
+              <v-col cols="8" class="text--secondary" v-text="profile.city.name"></v-col>
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-autocomplete :items="cities" v-model="profile.city"></v-autocomplete>
+            <v-autocomplete :items="cities" v-model="profile.city.name"></v-autocomplete>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -182,7 +182,7 @@
             <v-row no-gutters>
               <v-col cols="4">Отзывы</v-col>
               <v-col cols="8" class="text--secondary"
-                     v-text="'Количество отзывов: ' + profile.feedback.length "></v-col>
+                     v-text="'Количество отзывов: ' + feedbackCount "></v-col>
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -231,43 +231,41 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "Profile",
         data: () => ({
             profile: {
-                avatar: "https://randomuser.me/api/portraits/women/81.jpg",
-                email: "masha.pupkina@gmail.com",
-                name: "Маша Пупкина",
-                phone: "+79047389265",
-                city: "Санкт-Петербург",
-                activePetsitter: true,
-                catalog: [
-                    {service: "Выгул", price: 500, units: "руб"},
-                ],
-                animals: ["Собаки", "Кошки"],
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                rating: 4.6,
-                feedback: [
-                    {
-                        author: "Вася",
-                        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-                        mark: 4,
-                        text: "Not bad"
-                    },
-                    {
-                        author: "Вася",
-                        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-                        mark: 4,
-                        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-                    }
-                ]
+                avatar: "",
+                email: "",
+                name: "",
+                phone: "",
+                city: "",
+                activePetsitter: false,
+                catalog: [],
+                animals: [],
+                description: "",
+                rating: null,
+                feedback: []
             },
         }),
         computed: {
             notNullCatalog() {
-                return this.profile.catalog.filter(
-                    item => (item.service != null && item.price != null)
-                )
+                if (typeof this.profile.catalog !== 'undefined' && this.profile.catalog.length > 0) {
+                    return this.profile.catalog.filter(
+                        item => (item.service != null && item.price != null)
+                    )
+                } else {
+                    return [];
+                }
+            },
+            feedbackCount() {
+                if (typeof this.profile.feedback !== 'undefined') {
+                    return this.profile.feedback.length;
+                } else {
+                    return 0;
+                }
             },
             cities() {
                 return this.$store.getters.cities
@@ -286,9 +284,26 @@
             addService() {
                 this.profile.catalog.push({service: null, price: null, units: null})
             },
-            saveChanges(){
-            //    TODO implement method to save changes
+            saveChanges() {
+                //    TODO implement method to save changes
             }
+        },
+        mounted() {
+            axios.get("http://localhost:8090/user", {
+                params: {
+                    id: null,
+                    email: "masha.pupkina@gmail.com"
+                }
+            })
+                .then((response) => {
+                    this.profile = response.data;
+                    this.profile.avatar = "https://randomuser.me/api/portraits/women/81.jpg"
+                })
+                .catch((response) => {
+                    // eslint-disable-next-line no-console
+                    console.log(response);
+                })
+
         }
     }
 </script>
