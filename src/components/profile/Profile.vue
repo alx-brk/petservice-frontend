@@ -13,6 +13,8 @@
             prepend-icon="mdi-camera"
             justify="start"
             align="start"
+            v-model="file"
+            @change="uploadAvatar"
             flat
             solo
         />
@@ -233,6 +235,23 @@
 <script>
     import axios from 'axios'
 
+    const axiosInstance = axios.create({
+        baseURL: "http://localhost:8090/user",
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': true
+        }
+    });
+
+    const fileAxios = axios.create({
+        baseURL: "http://localhost:8090/image",
+        headers: {
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': true,
+            'Content-Type': 'multipart/form-data; boundary=--jopaOlolo'
+        }
+    })
+
     export default {
         name: "Profile",
         data: () => ({
@@ -249,6 +268,8 @@
                 rating: null,
                 feedback: []
             },
+            file: [],
+            axiosInst: null
         }),
         computed: {
             notNullCatalog() {
@@ -285,11 +306,39 @@
                 this.profile.catalog.push({service: null, price: null, units: null})
             },
             saveChanges() {
-                //    TODO implement method to save changes
+                this.profile.avatar = null;
+                // eslint-disable-next-line no-console
+                console.log(this.profile);
+                axiosInstance.put("http://localhost:8090/user", this.profile)
+                    .then((response) => {
+                        // eslint-disable-next-line no-console
+                        console.log(response.data)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.log(error)
+                    })
+            },
+            uploadAvatar() {
+                // eslint-disable-next-line no-console
+                console.log("Upload file: " + this.file)
+                if (this.file !== null) {
+                    const formData = new FormData();
+                    formData.append("file", this.file);
+                    fileAxios.post("/1", formData)
+                        .then((response) => {
+                            // eslint-disable-next-line no-console
+                            console.log(response.data)
+                        })
+                        .catch((error) => {
+                            // eslint-disable-next-line no-console
+                            console.log(error)
+                        })
+                }
             }
         },
         mounted() {
-            axios.get("http://localhost:8090/user", {
+            axiosInstance.get("http://localhost:8090/user", {
                 params: {
                     id: null,
                     email: "masha.pupkina@gmail.com"
@@ -297,11 +346,11 @@
             })
                 .then((response) => {
                     this.profile = response.data;
-                    this.profile.avatar = "https://randomuser.me/api/portraits/women/81.jpg"
+                    this.profile.avatar = "http://localhost:8090/image/52"
                 })
-                .catch((response) => {
+                .catch((error) => {
                     // eslint-disable-next-line no-console
-                    console.log(response);
+                    console.log(error);
                 })
 
         }
