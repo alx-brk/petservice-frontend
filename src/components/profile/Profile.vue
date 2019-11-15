@@ -3,7 +3,7 @@
     <v-layout align="center" justify="start" class="ma-3 flex-wrap flex-row">
       <v-flex>
         <v-avatar>
-          <img :src="profile.avatar">
+          <img :src="avatarLink">
         </v-avatar>
       </v-flex>
       <v-flex class="d-flex pr-12">
@@ -233,30 +233,13 @@
 </template>
 
 <script>
-    import axios from 'axios'
-
-    const axiosInstance = axios.create({
-        baseURL: "http://localhost:8090/user",
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': true
-        }
-    });
-
-    const fileAxios = axios.create({
-        baseURL: "http://localhost:8090/image",
-        headers: {
-            'Accept': 'application/json',
-            'Access-Control-Allow-Origin': true,
-            'Content-Type': 'multipart/form-data; boundary=--jopaOlolo'
-        }
-    })
+    import * as api from '../../common/api.js';
 
     export default {
         name: "Profile",
         data: () => ({
             profile: {
-                avatar: "",
+                avatar: null,
                 email: "",
                 name: "",
                 phone: "",
@@ -288,17 +271,22 @@
                     return 0;
                 }
             },
+            avatarLink() {
+                return (this.profile.avatar !== null) ?
+                    "http://localhost:8090/image/" + this.profile.avatar.id :
+                    "src/assets/logo.png";
+            },
             cities() {
-                return this.$store.getters.cities
+                return this.$store.getters.cities.map(item => item.name)
             },
             animals() {
-                return this.$store.getters.animals
+                return this.$store.getters.animals.map(item => item.name)
             },
             services() {
-                return this.$store.getters.services
+                return this.$store.getters.services.map(item => item.name)
             },
             units() {
-                return this.$store.getters.units
+                return this.$store.getters.units.map(item => item.name)
             }
         },
         methods: {
@@ -307,9 +295,7 @@
             },
             saveChanges() {
                 this.profile.avatar = null;
-                // eslint-disable-next-line no-console
-                console.log(this.profile);
-                axiosInstance.put("http://localhost:8090/user", this.profile)
+                api.userController.put("", this.profile)
                     .then((response) => {
                         // eslint-disable-next-line no-console
                         console.log(response.data)
@@ -320,12 +306,11 @@
                     })
             },
             uploadAvatar() {
-                // eslint-disable-next-line no-console
-                console.log("Upload file: " + this.file)
                 if (this.file !== null) {
                     const formData = new FormData();
                     formData.append("file", this.file);
-                    fileAxios.post("/1", formData)
+
+                    api.imageController.post("/1", formData)
                         .then((response) => {
                             // eslint-disable-next-line no-console
                             console.log(response.data)
@@ -338,7 +323,7 @@
             }
         },
         mounted() {
-            axiosInstance.get("http://localhost:8090/user", {
+            api.userController.get("", {
                 params: {
                     id: null,
                     email: "masha.pupkina@gmail.com"
@@ -346,7 +331,6 @@
             })
                 .then((response) => {
                     this.profile = response.data;
-                    this.profile.avatar = "http://localhost:8090/image/52"
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console

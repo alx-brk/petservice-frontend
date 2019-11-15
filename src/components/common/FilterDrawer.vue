@@ -163,13 +163,13 @@
         }),
         computed: {
             cities() {
-                return this.$store.getters.cities
+                return this.$store.getters.cities.map(item => item.name)
             },
             animals() {
-                return this.$store.getters.animals
+                return this.$store.getters.animals.map(item => item.name)
             },
             services() {
-                return this.$store.getters.services
+                return this.$store.getters.services.map(item => item.name)
             },
             showDates() {
                 return this.type === 'orderSearch'

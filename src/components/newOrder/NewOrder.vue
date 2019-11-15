@@ -75,6 +75,7 @@
 </template>
 
 <script>
+    import * as api from '../../common/api.js';
     import DateField from "../common/DateField";
 
     export default {
@@ -89,10 +90,13 @@
                 city: "Санкт-Петербург",
             },
             order: {
-                clientEmail: null,
+                id: null,
                 city: null,
+                client: this.profile,
+                petsitter: null,
+                jobStatus: "Новый",
                 animals: [],
-                services: [],
+                petServices: [],
                 startDate: null,
                 endDate: null,
                 description: null
@@ -100,22 +104,30 @@
         }),
         computed: {
             cities() {
-                return this.$store.getters.cities
+                return this.$store.getters.cities.map(item => item.name)
             },
             animals() {
-                return this.$store.getters.animals
+                return this.$store.getters.animals.map(item => item.name)
             },
             services() {
-                return this.$store.getters.services
+                return this.$store.getters.services.map(item => item.name)
             },
         },
         mounted() {
-            this.order.clientEmail = this.profile.email;
+            // this.order.clientEmail = this.profile.email;
             this.order.city = this.profile.city;
         },
         methods: {
             createOrder() {
-                // TODO implement
+                api.jobController.post("", this.order)
+                    .then((response) => {
+                        // eslint-disable-next-line no-console
+                        console.log(response.data)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.log(error)
+                    })
             }
         }
     }

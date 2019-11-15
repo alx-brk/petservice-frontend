@@ -1,5 +1,5 @@
 <template>
-  <v-list-item v-if="personProvided" @click="openDatails">
+  <v-list-item v-if="personProvided" @click="openDetails">
     <v-list-item-avatar>
       <v-img :src="person.avatar"></v-img>
     </v-list-item-avatar>
@@ -17,7 +17,7 @@
             person: Object
         },
         methods: {
-            openDatails() {
+            openDetails() {
                 // TODO implement modal display
             }
         },

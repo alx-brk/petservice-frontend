@@ -92,12 +92,6 @@
                     ? 'blue'
                     : 'green'
             },
-            animals() {
-                return this.$store.getters.animals
-            },
-            services() {
-                return this.$store.getters.services
-            },
             selectedAnimals() {
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.animals != null) ?
                       this.selectedItemsContainer.animals :

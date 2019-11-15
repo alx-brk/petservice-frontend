@@ -112,6 +112,12 @@
                 {title: 'Поиск заказа', icon: 'mdi-briefcase-search', 'url': '/orders-search'}
             ],
         }),
+        created() {
+            this.$store.dispatch('initAnimals');
+            this.$store.dispatch('initServices');
+            this.$store.dispatch('initCities');
+            this.$store.dispatch('initUnits');
+        }
     };
 </script>
 

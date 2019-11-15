@@ -37,14 +37,6 @@
                 }
             ]
         }),
-        computed: {
-            animals() {
-                return this.$store.getters.animals
-            },
-            services() {
-                return this.$store.getters.services
-            },
-        },
         methods: {
         }
     }
