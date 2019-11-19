@@ -129,6 +129,19 @@
           </div>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item>
+        <v-list-item-icon></v-list-item-icon>
+        <v-list-item-content>
+          <v-btn
+              class="ma-4"
+              @click="search"
+              color="primary"
+          >
+            <v-icon left>mdi-magnify</v-icon>
+            Поиск
+          </v-btn>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -181,6 +194,9 @@
         methods: {
             updateFilterOptions() {
                 this.$emit('input', this.filterOptions)
+            },
+            search() {
+                this.$emit('search')
             }
         }
     }

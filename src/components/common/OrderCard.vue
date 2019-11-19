@@ -22,7 +22,7 @@
             text
             :icon="statusIcon"
             :color="statusColor"
-        >{{ order.status }}
+        >{{ order.jobStatus }}
         </v-alert>
       </div>
     </div>
@@ -30,14 +30,14 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-wrap flex-column pa-3 mt-0 ml-3">
         <span class="text--secondary">Животные</span>
         <readonly-chip-group
-            :all-items="order.animals"
+            :all-items="animals"
             :selected-items="selectedAnimals"
         ></readonly-chip-group>
       </v-col>
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="order.services"
+            :all-items="services"
             :selected-items="selectedServices"
         ></readonly-chip-group>
       </v-col>
@@ -101,6 +101,12 @@
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
                     this.selectedItemsContainer.services :
                     []
+            },
+            services() {
+                return this.order.petServices.map(item => item.name)
+            },
+            animals() {
+                return this.order.animals.map(item => item.name)
             }
 
         },

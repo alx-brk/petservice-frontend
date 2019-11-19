@@ -3,6 +3,7 @@
     <filter-drawer
         type="petsitterSearch"
         v-model="filterOptions"
+        @search="search"
     ></filter-drawer>
     <petsitter-card
         v-for="profile in searchResults"
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+    import * as api from '../../common/api.js';
     import FilterDrawer from "../common/FilterDrawer";
     import PetsitterCard from "../common/PetsitterCard";
 
@@ -62,7 +64,21 @@
                 endDate: null,
                 creationDate: null
             }
-        })
+        }),
+        mounted() {
+        },
+        methods: {
+            search() {
+                api.userController.get("/search", this.filterOptions)
+                    .then((response) => {
+                        this.searchResults = response.data
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.log(error);
+                    })
+            }
+        }
     }
 </script>
 

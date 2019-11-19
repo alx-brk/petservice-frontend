@@ -2,7 +2,7 @@ import * as api from "../common/api";
 
 export default {
     state: {
-        units: ["руб/час", "руб/день", "руб"]
+        units: []
     },
     mutations: {
         SET_UNITS: (state, units) => {

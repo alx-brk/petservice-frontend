@@ -3,10 +3,11 @@
     <filter-drawer
       type="orderSearch"
       v-model="filterOptions"
+      @search="search"
     ></filter-drawer>
     <div class="flex-wrap ma-3 flex-column align-start">
       <order-card
-          v-for="(order, index) in orders"
+          v-for="(order, index) in searchResults"
           :key="index"
           :order="order"
           :selected-items-container="filterOptions"
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+    import * as api from '../../common/api.js';
     import OrderCard from "../common/OrderCard";
     import FilterDrawer from "../common/FilterDrawer";
 
@@ -27,7 +29,7 @@
         },
         data: () => ({
             drawer: true,
-            orders: [
+            searchResults: [
                 {
                     client: {
                         avatar: "https://randomuser.me/api/portraits/women/81.jpg",
@@ -51,7 +53,21 @@
                 endDate: null,
                 creationDate: null
             }
-        })
+        }),
+        mounted() {
+        },
+        methods: {
+            search() {
+                api.jobController.get("/search", this.filterOptions)
+                    .then((response) => {
+                        this.searchResults = response.data
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.log(error);
+                    })
+            }
+        }
     }
 </script>
 

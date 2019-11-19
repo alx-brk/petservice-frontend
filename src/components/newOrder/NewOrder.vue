@@ -6,7 +6,7 @@
           <v-col cols="12">
             <v-autocomplete
                 :items="cities"
-                v-model="profile.city"
+                v-model="order.city.name"
                 label="Город"
                 prepend-icon="mdi-city"
             ></v-autocomplete>
@@ -84,15 +84,11 @@
             'date-field': DateField
         },
         data: () => ({
-            profile: {
-                email: "masha.pupkina@gmail.com",
-                name: "Маша Пупкина",
-                city: "Санкт-Петербург",
-            },
+            profile: null,
             order: {
                 id: null,
-                city: null,
-                client: this.profile,
+                city: {name: null},
+                client: null,
                 petsitter: null,
                 jobStatus: "Новый",
                 animals: [],
@@ -114,8 +110,9 @@
             },
         },
         mounted() {
-            // this.order.clientEmail = this.profile.email;
+            this.profile = this.$store.getters.profile;
             this.order.city = this.profile.city;
+            this.order.client = this.profile;
         },
         methods: {
             createOrder() {

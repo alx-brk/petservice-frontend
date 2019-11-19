@@ -99,8 +99,8 @@
               <v-col cols="8">
                 <v-chip
                     v-for="animal in profile.animals"
-                    v-text="animal"
-                    :key="animal"
+                    v-text="animal.name"
+                    :key="animal.id"
                     class="ma-1"
                 ></v-chip>
               </v-col>
@@ -124,8 +124,8 @@
               <v-col cols="8">
                 <v-chip
                     v-for="option in notNullCatalog"
-                    v-text="option.service + ' - ' + option.price"
-                    :key="option.service"
+                    v-text="option.petService.name + ' - ' + option.price"
+                    :key="option.petService.id"
                     class="ma-1"
                 ></v-chip>
               </v-col>
@@ -140,9 +140,9 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="option in profile.catalog" :key="option.service">
+              <tr v-for="option in profile.catalog" :key="option.petService.id">
                 <td>
-                  <v-select :items="services" v-model="option.service"></v-select>
+                  <v-select :items="services" v-model="option.petService.name"></v-select>
                 </td>
                 <td>
                   <v-text-field v-model="option.price"></v-text-field>
@@ -239,6 +239,7 @@
         name: "Profile",
         data: () => ({
             profile: {
+                id: null,
                 avatar: null,
                 email: "",
                 name: "",
@@ -310,8 +311,9 @@
                     const formData = new FormData();
                     formData.append("file", this.file);
 
-                    api.imageController.post("/1", formData)
+                    api.imageController.post("/" + this.profile.id, formData)
                         .then((response) => {
+                            this.profile.avatar = response.data
                             // eslint-disable-next-line no-console
                             console.log(response.data)
                         })
@@ -323,19 +325,9 @@
             }
         },
         mounted() {
-            api.userController.get("", {
-                params: {
-                    id: null,
-                    email: "masha.pupkina@gmail.com"
-                }
-            })
-                .then((response) => {
-                    this.profile = response.data;
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line no-console
-                    console.log(error);
-                })
+            this.profile = this.$store.getters.profile
+            // eslint-disable-next-line no-console
+            console.log("mounted profile")
 
         }
     }

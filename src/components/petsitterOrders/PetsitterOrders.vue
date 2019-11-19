@@ -12,6 +12,7 @@
 </template>
 
 <script>
+    import * as api from '../../common/api.js';
     import OrderCard from "../common/OrderCard";
 
     export default {
@@ -26,12 +27,7 @@
                         avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
                         name: "Вася"
                     },
-                    petsitter: {
-                        avatar: "https://randomuser.me/api/portraits/women/81.jpg",
-                        name: "Маша Пупкина",
-                        animals: ["Собаки", "Кошки"],
-                        services: ["Выгул"]
-                    },
+                    petsitter: null,
                     status: "Обработан",
                     animals: ["Собаки", "Кошки"],
                     services: ["Выгул", "Кормление"],
@@ -40,8 +36,24 @@
                     endDate: "2019-11-15",
                     creationDate: "2019-10-30"
                 }
-            ]
-        })
+            ],
+            profile: null
+        }),
+        mounted() {
+            this.profile = this.$store.getters.profile
+            api.jobController.get("/petsitter-orders", {
+                params: {
+                    id: this.profile.id
+                }
+            })
+                .then((response) => {
+                    this.orders = response.data
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line no-console
+                    console.log(error);
+                })
+        }
     }
 </script>
 
