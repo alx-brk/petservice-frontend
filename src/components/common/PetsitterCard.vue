@@ -5,7 +5,7 @@
         <span class="text--secondary">Петситтер:</span>
         <v-list-item>
           <v-list-item-avatar>
-            <v-img :src="profile.avatar"></v-img>
+            <v-img :src="avatarLink"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title v-text="profile.name"></v-list-item-title>
@@ -79,6 +79,11 @@
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
                     this.selectedItemsContainer.services :
                     []
+            },
+            avatarLink() {
+                return (this.profile.avatar !== null) ?
+                    "http://localhost:8090/image/" + this.profile.avatar.id :
+                    require('@/assets/paw_icon.png');
             }
         }
     }

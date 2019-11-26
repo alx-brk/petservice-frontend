@@ -193,7 +193,22 @@
         },
         methods: {
             updateFilterOptions() {
-                this.$emit('input', this.filterOptions)
+                const toObjectMapper = item => {
+                    const container = {};
+                    container["name"] = item;
+                    return container;
+                }
+
+                const options = {
+                    city: toObjectMapper(this.filterOptions.city),
+                    animals: this.filterOptions.animals.map(toObjectMapper),
+                    services: this.filterOptions.services.map(toObjectMapper),
+                    startDate: this.filterOptions.startDate,
+                    endDate: this.filterOptions.endDate,
+                    creationDate: this.filterOptions.creationDate,
+                    rating: this.filterOptions.rating
+                }
+                this.$emit('input', options)
             },
             search() {
                 this.$emit('search')

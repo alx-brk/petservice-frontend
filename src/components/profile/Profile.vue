@@ -275,7 +275,7 @@
             avatarLink() {
                 return (this.profile.avatar !== null) ?
                     "http://localhost:8090/image/" + this.profile.avatar.id :
-                    "src/assets/logo.png";
+                    require('@/assets/paw_icon.png');
             },
             cities() {
                 return this.$store.getters.cities.map(item => item.name)

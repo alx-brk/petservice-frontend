@@ -94,12 +94,12 @@
             },
             selectedAnimals() {
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.animals != null) ?
-                      this.selectedItemsContainer.animals :
+                      this.selectedItemsContainer.animals.map(item => item.name) :
                       []
             },
             selectedServices() {
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
-                    this.selectedItemsContainer.services :
+                    this.selectedItemsContainer.services.map(item => item.name) :
                     []
             },
             services() {

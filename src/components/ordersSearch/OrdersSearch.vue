@@ -7,8 +7,8 @@
     ></filter-drawer>
     <div class="flex-wrap ma-3 flex-column align-start">
       <order-card
-          v-for="(order, index) in searchResults"
-          :key="index"
+          v-for="order in searchResults"
+          :key="order.id"
           :order="order"
           :selected-items-container="filterOptions"
       ></order-card>
@@ -31,18 +31,16 @@
             drawer: true,
             searchResults: [
                 {
-                    client: {
-                        avatar: "https://randomuser.me/api/portraits/women/81.jpg",
-                        name: "Маша Пупкина"
-                    },
+                    id: null,
+                    client: null,
                     petsitter: null,
-                    status: "Новый",
-                    animals: ["Собаки", "Кошки"],
-                    services: ["Выгул", "Кормление"],
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                    startDate: "2019-10-31",
+                    status: null,
+                    animals: [],
+                    petServices: [],
+                    description: null,
+                    startDate: null,
                     endDate: null,
-                    creationDate: "2019-10-30"
+                    creationDate: null
                 }
             ],
             filterOptions: {
@@ -58,7 +56,9 @@
         },
         methods: {
             search() {
-                api.jobController.get("/search", this.filterOptions)
+                // eslint-disable-next-line no-console
+                console.log(this.filterOptions)
+                api.jobController.post("/search", this.filterOptions)
                     .then((response) => {
                         this.searchResults = response.data
                     })

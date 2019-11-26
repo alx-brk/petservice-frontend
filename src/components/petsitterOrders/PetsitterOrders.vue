@@ -2,8 +2,8 @@
   <v-container>
     <v-layout align="center" justify="center" class="flex-wrap ma-3 flex-column">
       <order-card
-          v-for="(order, index) in orders"
-          :key="index"
+          v-for="order in orders"
+          :key="order.id"
           :order="order"
           :selected-items-container="order.petsitter"
       ></order-card>
@@ -23,18 +23,16 @@
         data: () => ({
             orders: [
                 {
-                    client: {
-                        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-                        name: "Вася"
-                    },
+                    id: null,
+                    client: null,
                     petsitter: null,
-                    status: "Обработан",
-                    animals: ["Собаки", "Кошки"],
-                    services: ["Выгул", "Кормление"],
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                    startDate: "2019-10-31",
-                    endDate: "2019-11-15",
-                    creationDate: "2019-10-30"
+                    status: null,
+                    animals: [],
+                    petServices: [],
+                    description: null,
+                    startDate: null,
+                    endDate: null,
+                    creationDate: null
                 }
             ],
             profile: null

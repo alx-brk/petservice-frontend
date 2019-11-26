@@ -28,7 +28,7 @@
             avatarLink() {
                 return (this.person.avatar !== null) ?
                     "http://localhost:8090/image/" + this.person.avatar.id :
-                    "src/assets/logo.png";
+                    require('@/assets/paw_icon.png');
             },
         }
     }
