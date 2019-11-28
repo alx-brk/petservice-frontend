@@ -1,14 +1,15 @@
 <template>
   <v-container>
     <filter-drawer
-      type="orderSearch"
-      v-model="filterOptions"
-      @search="search"
+        type="orderSearch"
+        v-model="filterOptions"
+        @search="search"
     ></filter-drawer>
-    <div class="flex-wrap ma-3 flex-column align-start">
+    <div class="flex-wrap ma-3 flex-column align-start"
+         v-for="order in searchResults"
+         :key="order.id"
+    >
       <order-card
-          v-for="order in searchResults"
-          :key="order.id"
           :order="order"
           :selected-items-container="filterOptions"
       ></order-card>
@@ -29,24 +30,11 @@
         },
         data: () => ({
             drawer: true,
-            searchResults: [
-                {
-                    id: null,
-                    client: null,
-                    petsitter: null,
-                    status: null,
-                    animals: [],
-                    petServices: [],
-                    description: null,
-                    startDate: null,
-                    endDate: null,
-                    creationDate: null
-                }
-            ],
+            searchResults: [],
             filterOptions: {
                 city: null,
                 animals: [],
-                services: [],
+                petServices: [],
                 startDate: null,
                 endDate: null,
                 creationDate: null
@@ -56,8 +44,6 @@
         },
         methods: {
             search() {
-                // eslint-disable-next-line no-console
-                console.log(this.filterOptions)
                 api.jobController.post("/search", this.filterOptions)
                     .then((response) => {
                         this.searchResults = response.data

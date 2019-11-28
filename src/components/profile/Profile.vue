@@ -76,7 +76,12 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-autocomplete :items="cities" v-model="profile.city.name"></v-autocomplete>
+            <v-autocomplete
+                :items="cities"
+                v-model="profile.city.name"
+                item-text="name"
+                return-object
+            ></v-autocomplete>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -110,6 +115,8 @@
             <v-autocomplete
                 :items="animals"
                 v-model="profile.animals"
+                item-text="name"
+                return-object
                 dense
                 chips
                 multiple
@@ -140,9 +147,14 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="option in profile.catalog" :key="option.petService.id">
+              <tr v-for="option in profile.catalogSet" :key="option.petService.id">
                 <td>
-                  <v-select :items="services" v-model="option.petService.name"></v-select>
+                  <v-select
+                      :items="services"
+                      item-text="name"
+                      v-model="option.petService"
+                      return-object
+                  ></v-select>
                 </td>
                 <td>
                   <v-text-field v-model="option.price"></v-text-field>
@@ -246,7 +258,7 @@
                 phone: "",
                 city: "",
                 activePetsitter: false,
-                catalog: [],
+                catalogSet: [],
                 animals: [],
                 description: "",
                 rating: null,
@@ -257,9 +269,9 @@
         }),
         computed: {
             notNullCatalog() {
-                if (typeof this.profile.catalog !== 'undefined' && this.profile.catalog.length > 0) {
-                    return this.profile.catalog.filter(
-                        item => (item.service != null && item.price != null)
+                if (typeof this.profile.catalogSet !== 'undefined' && this.profile.catalogSet.length > 0) {
+                    return this.profile.catalogSet.filter(
+                        item => (item.petService != null && item.price != null)
                     )
                 } else {
                     return [];
@@ -278,21 +290,21 @@
                     require('@/assets/paw_icon.png');
             },
             cities() {
-                return this.$store.getters.cities.map(item => item.name)
+                return this.$store.getters.cities
             },
             animals() {
-                return this.$store.getters.animals.map(item => item.name)
+                return this.$store.getters.animals
             },
             services() {
-                return this.$store.getters.services.map(item => item.name)
+                return this.$store.getters.services
             },
             units() {
-                return this.$store.getters.units.map(item => item.name)
+                return this.$store.getters.units
             }
         },
         methods: {
             addService() {
-                this.profile.catalog.push({service: null, price: null, units: null})
+                this.profile.catalogSet.push({petService: {name: null}, price: null, units: null})
             },
             saveChanges() {
                 this.profile.avatar = null;

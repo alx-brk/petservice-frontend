@@ -1,9 +1,10 @@
 <template>
   <v-container>
-    <div class="flex-wrap ma-3 flex-column align-start">
+    <div class="flex-wrap ma-3 flex-column align-start"
+         v-for="order in orders"
+         :key="order.id"
+    >
       <order-card
-          v-for="order in orders"
-          :key="order.id"
           :order="order"
           :selected-items-container="order.petsitter"
       ></order-card>
@@ -22,18 +23,6 @@
         },
         data: () => ({
             orders: [
-                {
-                    id: null,
-                    client: null,
-                    petsitter: null,
-                    status: null,
-                    animals: [],
-                    petServices: [],
-                    description: null,
-                    startDate: null,
-                    endDate: null,
-                    creationDate: null
-                }
             ],
             profile: null
         }),

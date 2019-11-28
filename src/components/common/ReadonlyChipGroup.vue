@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex flex-wrap">
     <v-chip
-        v-for="(item, index) in allItems"
-        :key="index"
+        v-for="item in allItems"
+        :key="item.id"
         v-show="showChip(item)"
         class="ma-2"
         :color="chipColor(item)"
@@ -29,16 +29,17 @@
             displayInactive: {
                 type: Boolean,
                 default: true
+            },
+            entity: {
+                type: String,
+                default: "simple" // simple means with {id, name} structure such as (service, city, animal)
             }
         },
         methods: {
             isSelected(item) {
-                if (this.areObjects(this.selectedItems)) {
-                    return this.mappedServices(this.selectedItems).includes(item)
-                }
-                else {
-                    return this.selectedItems.includes(item)
-                }
+                return (this.entity === "catalog") ?
+                    this.arrayContainsItem(this.selectedItems, item.petService) :
+                    this.arrayContainsItem(this.selectedItems, item)
             },
             chipColor(item) {
                 return this.isSelected(item) ? 'primary' : 'default'
@@ -46,16 +47,13 @@
             showChip(item) {
                 return this.displayInactive || this.isSelected(item)
             },
-            areObjects(items) {
-                return items.length > 0 && typeof items[0] === 'object'
-            },
-            mappedServices(items) {
-                return items.map(item => item.service)
-            },
             mappedItem(item) {
-                return (typeof item === 'object') ?
-                    item.service + ' - ' + item.price + ' ' + item.units :
-                    item
+                return (this.entity === "catalog") ?
+                    item.petService.name + ' - ' + item.price + ' ' + item.units :
+                    item.name
+            },
+            arrayContainsItem(array, item){
+                return array.some(e => e.id === item.id && e.name === item.name)
             }
         }
     }

@@ -27,25 +27,11 @@
         },
         data: () => ({
             searchResults: [
-                {
-                    id: null,
-                    avatar: null,
-                    email: "",
-                    name: "",
-                    phone: "",
-                    city: "",
-                    activePetsitter: false,
-                    catalog: [],
-                    animals: [],
-                    description: "",
-                    rating: null,
-                    feedback: []
-                }
             ],
             filterOptions: {
                 city: null,
                 animals: [],
-                services: [],
+                petServices: [],
                 rating: null
             }
         }),

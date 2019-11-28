@@ -30,6 +30,8 @@
           <v-autocomplete
               :items="cities"
               v-model="filterOptions.city"
+              item-text="name"
+              return-object
               @input="updateFilterOptions"
               label="Город"
           ></v-autocomplete>
@@ -44,8 +46,10 @@
           <v-autocomplete
               :items="animals"
               v-model="filterOptions.animals"
+              item-text="name"
               @input="updateFilterOptions"
               label="Животные"
+              return-object
               chips
               multiple
               clearable
@@ -60,9 +64,11 @@
         <v-list-item-content>
           <v-autocomplete
               :items="services"
-              v-model="filterOptions.services"
+              v-model="filterOptions.petServices"
               @input="updateFilterOptions"
+              item-text="name"
               label="Услуги"
+              return-object
               chips
               multiple
               clearable
@@ -167,7 +173,7 @@
             filterOptions: {
                 city: null,
                 animals: [],
-                services: [],
+                petServices: [],
                 startDate: null,
                 endDate: null,
                 creationDate: null,
@@ -176,13 +182,13 @@
         }),
         computed: {
             cities() {
-                return this.$store.getters.cities.map(item => item.name)
+                return this.$store.getters.cities
             },
             animals() {
-                return this.$store.getters.animals.map(item => item.name)
+                return this.$store.getters.animals
             },
             services() {
-                return this.$store.getters.services.map(item => item.name)
+                return this.$store.getters.services
             },
             showDates() {
                 return this.type === 'orderSearch'
@@ -193,16 +199,16 @@
         },
         methods: {
             updateFilterOptions() {
-                const toObjectMapper = item => {
-                    const container = {};
-                    container["name"] = item;
-                    return container;
-                }
+                // const toObjectMapper = item => {
+                //     const container = {};
+                //     container["name"] = item;
+                //     return container;
+                // }
 
                 const options = {
-                    city: toObjectMapper(this.filterOptions.city),
-                    animals: this.filterOptions.animals.map(toObjectMapper),
-                    services: this.filterOptions.services.map(toObjectMapper),
+                    city: this.filterOptions.city,
+                    animals: this.filterOptions.animals,
+                    petServices: this.filterOptions.petServices,
                     startDate: this.filterOptions.startDate,
                     endDate: this.filterOptions.endDate,
                     creationDate: this.filterOptions.creationDate,

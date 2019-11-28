@@ -30,14 +30,14 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-wrap flex-column pa-3 mt-0 ml-3">
         <span class="text--secondary">Животные</span>
         <readonly-chip-group
-            :all-items="animals"
+            :all-items="order.animals"
             :selected-items="selectedAnimals"
         ></readonly-chip-group>
       </v-col>
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="services"
+            :all-items="order.petServices"
             :selected-items="selectedServices"
         ></readonly-chip-group>
       </v-col>
@@ -94,19 +94,19 @@
             },
             selectedAnimals() {
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.animals != null) ?
-                      this.selectedItemsContainer.animals.map(item => item.name) :
+                      this.selectedItemsContainer.animals :
                       []
             },
             selectedServices() {
                 return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
-                    this.selectedItemsContainer.services.map(item => item.name) :
+                    this.selectedItemsContainer.services :
                     []
             },
             services() {
-                return this.order.petServices.map(item => item.name)
+                return this.order.petServices
             },
             animals() {
-                return this.order.animals.map(item => item.name)
+                return this.order.animals
             }
 
         },

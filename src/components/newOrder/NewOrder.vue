@@ -6,7 +6,9 @@
           <v-col cols="12">
             <v-autocomplete
                 :items="cities"
-                v-model="order.city.name"
+                v-model="order.city"
+                item-text="name"
+                return-object
                 label="Город"
                 prepend-icon="mdi-city"
             ></v-autocomplete>
@@ -15,6 +17,8 @@
             <v-autocomplete
                 :items="animals"
                 v-model="order.animals"
+                item-text="name"
+                return-object
                 label="Список животных"
                 prepend-icon="mdi-paw"
                 dense
@@ -25,7 +29,9 @@
           <v-col cols="12">
             <v-autocomplete
                 :items="services"
-                v-model="order.services"
+                v-model="order.petServices"
+                item-text="name"
+                return-object
                 label="Список услуг"
                 prepend-icon="mdi-dog-service"
                 dense
@@ -61,13 +67,13 @@
         </v-row>
         <v-row>
           <v-btn
-              class="ma-4"
-              @click="createOrder"
-              color="primary"
-          >
-            <v-icon left>mdi-content-save-move</v-icon>
-            Создать заказ
-          </v-btn>
+            class="ma-4"
+            @click="createOrder"
+            color="primary"
+        >
+          <v-icon left>mdi-content-save-move</v-icon>
+          Создать заказ
+        </v-btn>
         </v-row>
       </v-container>
     </v-form>
@@ -100,13 +106,13 @@
         }),
         computed: {
             cities() {
-                return this.$store.getters.cities.map(item => item.name)
+                return this.$store.getters.cities
             },
             animals() {
-                return this.$store.getters.animals.map(item => item.name)
+                return this.$store.getters.animals
             },
             services() {
-                return this.$store.getters.services.map(item => item.name)
+                return this.$store.getters.services
             },
         },
         mounted() {

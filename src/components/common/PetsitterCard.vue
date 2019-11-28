@@ -42,8 +42,9 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="profile.catalog"
+            :all-items="profile.catalogSet"
             :selected-items="selectedServices"
+            entity="catalog"
         ></readonly-chip-group>
       </v-col>
       <v-col xl="7" lg="7" md="7" sm="12" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
@@ -76,8 +77,8 @@
                     []
             },
             selectedServices() {
-                return (this.selectedItemsContainer != null && this.selectedItemsContainer.services != null) ?
-                    this.selectedItemsContainer.services :
+                return (this.selectedItemsContainer != null && this.selectedItemsContainer.petServices != null) ?
+                    this.selectedItemsContainer.petServices :
                     []
             },
             avatarLink() {
