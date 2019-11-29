@@ -15,6 +15,12 @@
       <v-list-item-title>Фильтрация</v-list-item-title>
       <v-btn
           icon
+          @click.stop="clearFilterOptions"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+      <v-btn
+          icon
           @click.stop="mini = !mini"
       >
         <v-icon>mdi-arrow-collapse-right</v-icon>
@@ -83,8 +89,8 @@
         <v-list-item-content>
           <date-field
               label="Дата начала"
-              v-model="filterOptions.startDate"
-              @input="updateFilterOptions"
+              :value="filterOptions.startDate"
+              @input="updateStartDate"
               :no-title="true"
           ></date-field>
         </v-list-item-content>
@@ -97,8 +103,8 @@
         <v-list-item-content>
           <date-field
               label="Дата окончания"
-              v-model="filterOptions.endDate"
-              @input="updateFilterOptions"
+              :value="filterOptions.endDate"
+              @input="updateEndDate"
               :no-title="true"
           ></date-field>
         </v-list-item-content>
@@ -111,10 +117,25 @@
         <v-list-item-content>
           <date-field
               label="Дата создания"
-              v-model="filterOptions.creationDate"
-              @input="updateFilterOptions"
+              :value="filterOptions.creationDate"
+              @input="updateCreationDate"
               :no-title="true"
           ></date-field>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item link v-if="showStatus">
+        <v-list-item-icon>
+          <v-icon>mdi-checkbox-marked-circle-outline</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-autocomplete
+              :items="jobStatuses"
+              v-model="filterOptions.jobStatus"
+              @input="updateFilterOptions"
+              label="Статус"
+              clearable
+          ></v-autocomplete>
         </v-list-item-content>
       </v-list-item>
 
@@ -126,6 +147,7 @@
           <div class="justify-space-around d-flex flex-row flex-nowrap align-center">
             <v-rating
                 v-model="filterOptions.rating"
+                @input="updateFilterOptions"
                 empty-icon="mdi-star-outline"
                 half-icon="mdi-star-half"
                 full-icon="mdi-star"
@@ -162,7 +184,6 @@
                 type: String,
                 required: true
             },
-            value: Object
         },
         components: {
             'date-field': DateField
@@ -177,7 +198,8 @@
                 startDate: null,
                 endDate: null,
                 creationDate: null,
-                rating: null
+                rating: null,
+                jobStatus: "Новый"
             }
         }),
         computed: {
@@ -190,7 +212,13 @@
             services() {
                 return this.$store.getters.services
             },
+            jobStatuses() {
+                return this.$store.getters.jobStatuses
+            },
             showDates() {
+                return this.type === 'orderSearch'
+            },
+            showStatus() {
                 return this.type === 'orderSearch'
             },
             showRating() {
@@ -199,12 +227,6 @@
         },
         methods: {
             updateFilterOptions() {
-                // const toObjectMapper = item => {
-                //     const container = {};
-                //     container["name"] = item;
-                //     return container;
-                // }
-
                 const options = {
                     city: this.filterOptions.city,
                     animals: this.filterOptions.animals,
@@ -212,12 +234,36 @@
                     startDate: this.filterOptions.startDate,
                     endDate: this.filterOptions.endDate,
                     creationDate: this.filterOptions.creationDate,
-                    rating: this.filterOptions.rating
+                    rating: this.filterOptions.rating,
+                    jobStatus: this.filterOptions.jobStatus
                 }
                 this.$emit('input', options)
             },
             search() {
                 this.$emit('search')
+            },
+            clearFilterOptions() {
+                this.filterOptions.city = null
+                this.filterOptions.animals = []
+                this.filterOptions.petServices = []
+                this.filterOptions.startDate = null
+                this.filterOptions.endDate = null
+                this.filterOptions.creationDate = null
+                this.filterOptions.rating = null
+                this.filterOptions.jobStatus = null
+                this.updateFilterOptions()
+            },
+            updateStartDate(value) {
+                this.filterOptions.startDate = value
+                this.updateFilterOptions()
+            },
+            updateEndDate(value) {
+                this.filterOptions.endDate = value
+                this.updateFilterOptions()
+            },
+            updateCreationDate(value) {
+                this.filterOptions.creationDate = value
+                this.updateFilterOptions()
             }
         }
     }

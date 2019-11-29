@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-text-field
-        v-model="date"
+        :value="value"
         :label="label"
         @click="showPicker=true"
         :prepend-icon="icon"
@@ -43,6 +43,11 @@
             updateDate() {
                 this.showPicker = false;
                 this.$emit('input', this.date)
+            }
+        },
+        mounted() {
+            if (this.value !== undefined){
+                this.date = this.value
             }
         }
     }

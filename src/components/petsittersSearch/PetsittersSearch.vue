@@ -2,7 +2,7 @@
   <v-container>
     <filter-drawer
         type="petsitterSearch"
-        v-model="filterOptions"
+        @input="updateFilterOptions"
         @search="search"
     ></filter-drawer>
     <petsitter-card
@@ -47,6 +47,9 @@
                         // eslint-disable-next-line no-console
                         console.log(error);
                     })
+            },
+            updateFilterOptions(options){
+                this.filterOptions = options
             }
         }
     }

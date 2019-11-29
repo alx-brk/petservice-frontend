@@ -2,7 +2,7 @@
   <v-container>
     <filter-drawer
         type="orderSearch"
-        v-model="filterOptions"
+        @input="updateFilterOptions"
         @search="search"
     ></filter-drawer>
     <div class="flex-wrap ma-3 flex-column align-start"
@@ -37,7 +37,8 @@
                 petServices: [],
                 startDate: null,
                 endDate: null,
-                creationDate: null
+                creationDate: null,
+                jobStatus: null
             }
         }),
         mounted() {
@@ -52,6 +53,9 @@
                         // eslint-disable-next-line no-console
                         console.log(error);
                     })
+            },
+            updateFilterOptions(options){
+                this.filterOptions = options
             }
         }
     }

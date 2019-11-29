@@ -118,6 +118,7 @@
             this.$store.dispatch('initCities');
             this.$store.dispatch('initUnits');
             this.$store.dispatch('fetchProfile');
+            this.$store.dispatch('initStatuses');
         }
     };
 </script>
