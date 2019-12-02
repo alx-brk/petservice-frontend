@@ -58,7 +58,6 @@
               return-object
               chips
               multiple
-              clearable
           ></v-autocomplete>
         </v-list-item-content>
       </v-list-item>
@@ -77,7 +76,6 @@
               return-object
               chips
               multiple
-              clearable
           ></v-autocomplete>
         </v-list-item-content>
       </v-list-item>
@@ -134,7 +132,6 @@
               v-model="filterOptions.jobStatus"
               @input="updateFilterOptions"
               label="Статус"
-              clearable
           ></v-autocomplete>
         </v-list-item-content>
       </v-list-item>
@@ -199,7 +196,7 @@
                 endDate: null,
                 creationDate: null,
                 rating: null,
-                jobStatus: "Новый"
+                jobStatus: null
             }
         }),
         computed: {

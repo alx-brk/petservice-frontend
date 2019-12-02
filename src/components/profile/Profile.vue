@@ -52,7 +52,7 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-text-field v-model="profile.name"></v-text-field>
+            <v-text-field v-model.lazy="$v.profile.name.$model"></v-text-field>
           </v-expansion-panel-content>
         </v-expansion-panel>
 
@@ -64,7 +64,7 @@
             </v-row>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <v-text-field v-model="profile.phone"></v-text-field>
+            <v-text-field v-model.lazy="$v.profile.phone.$model"></v-text-field>
           </v-expansion-panel-content>
         </v-expansion-panel>
 
@@ -78,7 +78,7 @@
           <v-expansion-panel-content>
             <v-autocomplete
                 :items="cities"
-                v-model="profile.city.name"
+                v-model.lazy="$v.profile.city.$model"
                 item-text="name"
                 return-object
             ></v-autocomplete>
@@ -236,6 +236,7 @@
           class="ma-4"
           @click="saveChanges"
           color="primary"
+          :disabled="buttonDisabled"
       >
         <v-icon left>mdi-content-save-move</v-icon>
         Сохранить изменения
@@ -246,6 +247,10 @@
 
 <script>
     import * as api from '../../common/api.js';
+    import {required, email} from 'vuelidate/lib/validators';
+
+    const simpleObjectValidator = (obj) => obj !== null && obj.id !== null && obj.name !== null
+    const catalogObjectValidator = (obj) => obj !== null && obj.petService != null && obj.petService.id !== null && obj.petService.name !== null && obj.price !== null && obj.units !== null
 
     export default {
         name: "Profile",
@@ -265,7 +270,7 @@
                 feedback: []
             },
             file: [],
-            axiosInst: null
+            validCities: []
         }),
         computed: {
             notNullCatalog() {
@@ -300,6 +305,9 @@
             },
             units() {
                 return this.$store.getters.units
+            },
+            buttonDisabled() {
+                return !this.$v.$dirty || this.$v.$error
             }
         },
         methods: {
@@ -340,7 +348,59 @@
             this.profile = this.$store.getters.profile
             // eslint-disable-next-line no-console
             console.log("mounted profile")
-
+        },
+        validations() {
+            if (!this.profile.activePetsitter) {
+                return {
+                    profile: {
+                        email: {
+                            required,
+                            email
+                        },
+                        name: {
+                            required
+                        },
+                        phone: {
+                            required
+                        },
+                        city: {
+                            required,
+                            simpleObjectValidator
+                        }
+                    }
+                }
+            } else {
+                return {
+                    profile: {
+                        email: {
+                            required,
+                            email
+                        },
+                        name: {
+                            required
+                        },
+                        phone: {
+                            required
+                        },
+                        city: {
+                            required,
+                            simpleObjectValidator
+                        },
+                        animals: {
+                            required,
+                            $each: {
+                                simpleObjectValidator
+                            }
+                        },
+                        catalogSet: {
+                            required,
+                            $each: {
+                                catalogObjectValidator
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 </script>

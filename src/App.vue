@@ -97,7 +97,7 @@
         name: 'App',
         components: {},
         data: () => ({
-            drawer: true,
+            drawer: false,
             links: [
                 {title: 'Выйти', icon: 'mdi-exit-to-app', 'url': '/'}
             ],
