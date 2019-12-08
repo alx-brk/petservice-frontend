@@ -7,6 +7,9 @@ import ClientOrders from "../components/clientOrders/ClientOrders";
 import PetsitterOrders from "../components/petsitterOrders/PetsitterOrders";
 import OrdersSearch from "../components/ordersSearch/OrdersSearch";
 import PetsittersSearch from "../components/petsittersSearch/PetsittersSearch";
+import Registration from "../components/auth/Registration";
+import Login from "../components/auth/Login";
+import ErrorPage from "../components/auth/ErrorPage";
 
 Vue.use(VueRouter)
 
@@ -47,6 +50,22 @@ export default new VueRouter({
             name: 'profile',
             component: Profile
         },
+        {
+            path: '/registration',
+            name: 'registration',
+            component: Registration
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
+        },
+        {
+            path: '/error',
+            name: 'error',
+            component: ErrorPage
+        },
+
     ],
     base: process.env.BASE_URL,
     mode: 'history'

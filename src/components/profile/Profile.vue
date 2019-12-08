@@ -45,52 +45,71 @@
         <v-row align="center">
             <v-expansion-panels popout focusable>
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header :disable-icon-rotate="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
+                        <template v-slot:actions v-if="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
+                            <v-icon v-if="errors.name.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.name)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
-                            field-name="Имя"
-                            v-model="profile.name"
-                            @clear="profile.name = ''"
-                            type="text"
-                        />
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
-                        <v-text-field v-model.lazy="$v.profile.name.$model"></v-text-field>
-                        <validation-alert v-if="!$v.profile.name.required">Требуется указать имя</validation-alert>
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
-
-                <v-expansion-panel>
-                    <v-expansion-panel-header>
-                        <exp-panel-header
-                                field-name="Телефон"
-                                v-model="profile.phone"
-                                @clear="profile.phone = ''"
+                                field-name="Имя"
+                                v-model="profile.name"
+                                @clear="clearName"
                                 type="text"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                        <v-text-field v-model.lazy="$v.profile.phone.$model"></v-text-field>
-                        <validation-alert v-if="!$v.profile.phone.required">Требуется указать телефон</validation-alert>
+                        <v-text-field
+                                :value="profile.name"
+                                :error-messages="errors.name"
+                                @change="nameInput"
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header :disable-icon-rotate="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
+                        <template v-slot:actions v-if="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
+                            <v-icon v-if="errors.phone.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.phone)" color="teal">mdi-check</v-icon>
+                        </template>
+                        <exp-panel-header
+                                field-name="Телефон"
+                                v-model="profile.phone"
+                                @clear="clearPhone"
+                                type="text"
+                        />
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-text-field
+                                :value="profile.phone"
+                                :error-messages="errors.phone"
+                                @change="phoneInput"
+                        />
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+
+                <v-expansion-panel>
+                    <v-expansion-panel-header :disable-icon-rotate="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
+                        <template v-slot:actions v-if="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
+                            <v-icon v-if="errors.city.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.city.animals)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Город"
                                 v-model="cityName"
-                                @clear="profile.city = null"
+                                @clear="clearCity"
                                 type="text"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-autocomplete
                                 :items="cities"
-                                v-model.lazy="$v.profile.city.$model"
+                                :value="profile.city"
+                                :error-messages="errors.city"
+                                @change="cityInput"
                                 item-text="name"
                                 return-object
-                        ></v-autocomplete>
-                        <validation-alert v-if="nullSafetyError($v.profile.city)">Требуется указать город</validation-alert>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-expansion-panels>
@@ -101,41 +120,49 @@
                     <v-switch
                             v-model="profile.activePetsitter"
                             label="Отображать вас в списке петситтеров"
-                    ></v-switch>
+                    />
                 </v-col>
             </v-row>
 
             <v-expansion-panels popout focusable :disabled="!profile.activePetsitter">
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header :disable-icon-rotate="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                        <template v-slot:actions v-if="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                            <v-icon v-if="errors.animals.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.animals)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Животные"
                                 v-model="profile.animals"
-                                @clear="profile.animals = []"
+                                @clear="clearAnimals"
                                 type="animalChips"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-autocomplete
                                 :items="animals"
-                                v-model.lazy="profile.animals"
-                                @input="$v.profile.animals.$touch()"
+                                :value="profile.animals"
+                                :error-messages="errors.animals"
+                                @change="animalsInput"
                                 item-text="name"
                                 return-object
                                 dense
                                 chips
                                 multiple
-                        ></v-autocomplete>
-                        <validation-alert v-if="nullSafetyError($v.profile.animals)">Требуется указать хотя бы одно животное</validation-alert>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header :disable-icon-rotate="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
+                        <template v-slot:actions v-if="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
+                            <v-icon v-if="showAlert" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValidCatalog($v.profile.catalogSet)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Услуги и цены"
                                 v-model="notNullCatalog"
-                                @clear="profile.catalogSet = []"
+                                @clear="clearCatalogSet"
                                 type="catalogChips"
                         />
                     </v-expansion-panel-header>
@@ -148,25 +175,44 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="option in profile.catalogSet" :key="option.petService.id">
+                            <tr v-for="(option, i) in profile.catalogSet" :key="i">
                                 <td>
                                     <v-select
                                             :items="services"
-                                            @input="$v.profile.catalogSet.$touch()"
                                             item-text="name"
                                             v-model="option.petService"
+                                            @change="catalogSetChange"
+                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
                                             return-object
-                                    ></v-select>
+                                    />
                                 </td>
                                 <td>
-                                    <v-text-field v-model="option.price"></v-text-field>
+                                    <v-text-field
+                                            type="number"
+                                            v-model="option.price"
+                                            @change="catalogSetChange"
+                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
+                                    />
                                 </td>
                                 <td>
-                                    <v-select :items="units" v-model="option.units"></v-select>
+                                    <v-select
+                                            :items="units"
+                                            v-model="option.units"
+                                            @change="catalogSetChange"
+                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
+                                    />
                                 </td>
                             </tr>
                             </tbody>
                         </v-simple-table>
+                        <div class="ma-3">
+                            <span
+                                    v-for="(error, i) in errors.catalogSet"
+                                    :key="i"
+                                    class="v-text-field__details v-messages theme--light error--text v-messages__wrapper v-messages__message"
+                                    v-text="error"
+                            />
+                        </div>
                         <v-btn
                                 class="ma-3"
                                 @click="addService"
@@ -175,7 +221,6 @@
                             <v-icon left>mdi-plus-circle</v-icon>
                             Добавить
                         </v-btn>
-                        <validation-alert v-if="nullSafetyError($v.profile.catalogSet)">Требуется указать хотя бы один сервис</validation-alert>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
@@ -201,7 +246,7 @@
                         <v-row no-gutters>
                             <v-col cols="4">Отзывы</v-col>
                             <v-col cols="8" class="text--secondary"
-                                   v-text="'Количество отзывов: ' + feedbackCount "></v-col>
+                                   v-text="'Количество отзывов: ' + feedbackCount "/>
                         </v-row>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -227,7 +272,7 @@
                                                 full-icon="mdi-star"
                                                 half-increments
                                                 readonly
-                                        ></v-rating>
+                                        />
                                     </v-row>
                                 </v-list-item>
                             </v-card-actions>
@@ -241,7 +286,6 @@
                     class="ma-4"
                     @click="saveChanges"
                     color="primary"
-                    :disabled="buttonDisabled"
             >
                 <v-icon left>mdi-content-save-move</v-icon>
                 Сохранить изменения
@@ -252,16 +296,15 @@
 
 <script>
     import * as api from '../../common/api.js';
-    import {required, email} from 'vuelidate/lib/validators';
-    import ValidationAlert from "../common/ValidationAlert";
+    import {required} from 'vuelidate/lib/validators';
     import ExpPanelHeader from "./ExpPanelHeader";
 
-    const notEmpty = (array) => array.length > 0;
+    const notEmptyList = (array) => array.length > 0;
+    const notEmpty = (value) => value.id !== null && value.name != null
 
     export default {
         name: "Profile",
         components: {
-            'validation-alert': ValidationAlert,
             'exp-panel-header': ExpPanelHeader
         },
         data: () => ({
@@ -278,6 +321,13 @@
                 description: "",
                 rating: null,
                 feedback: []
+            },
+            errors: {
+                name: [],
+                phone: [],
+                city: [],
+                animals: [],
+                catalogSet: []
             },
             file: [],
             validCities: []
@@ -316,20 +366,106 @@
             units() {
                 return this.$store.getters.units
             },
-            buttonDisabled() {
-                return !this.$v.$anyDirty || this.$v.$anyError
-            },
             cityName() {
                 return (this.profile.city === undefined || this.profile.city == null) ? '' : this.profile.city.name
-            }
+            },
+            showAlert() {
+                return (this.$v.profile.catalogSet !== undefined && this.$v.profile.catalogSet.$anyError) ||
+                        this.errors.catalogSet > 0
+            },
         },
         methods: {
+            nameInput(value) {
+                this.profile.name = value;
+                this.$v.profile.name.$touch()
+                this.errors.name = (this.$v.profile.name.$invalid) ? ["Требуется указать имя"] : []
+            },
+            phoneInput(value) {
+                this.profile.phone = value
+                this.$v.profile.phone.$touch()
+                this.errors.phone = (this.$v.profile.phone.$invalid) ? ["Требуется указать телефон"] : []
+            },
+            cityInput(value) {
+                this.profile.city = value
+                this.$v.profile.city.$touch()
+                this.errors.city = (this.$v.profile.city.$invalid) ? ["Требуется указать город"] : []
+            },
+            animalsInput(value) {
+                this.profile.animals = value
+                this.$v.profile.animals.$touch()
+                this.errors.animals = (this.$v.profile.animals.$invalid) ? ["Требуется указать хотя бы одно животное"] : []
+            },
+            clearName() {
+                this.profile.name = "";
+                this.$v.profile.name.$touch()
+                this.errors.name = (this.$v.profile.name.$invalid) ? ["Требуется указать имя"] : []
+            },
+            clearPhone() {
+                this.profile.phone = ""
+                this.$v.profile.phone.$touch()
+                this.errors.phone = (this.$v.profile.phone.$invalid) ? ["Требуется указать телефон"] : []
+            },
+            clearCity() {
+                this.profile.city = null
+                this.$v.profile.city.$touch()
+                this.errors.city = (this.$v.profile.city.$invalid) ? ["Требуется указать город"] : []
+            },
+            clearAnimals() {
+                this.profile.animals = []
+                this.$v.profile.animals.$touch()
+                this.errors.animals = (this.$v.profile.animals.$invalid) ? ["Требуется указать хотя бы одно животное"] : []
+            },
+            clearCatalogSet() {
+                this.profile.catalogSet = []
+                this.$v.profile.catalogSet.$touch()
+                this.errors.catalogSet = []
+                if (this.$v.profile.catalogSet.$error){
+                    this.errors.catalogSet.push("Требуется указать хотя бы один сервис")
+                }
+            },
             addService() {
+                this.$v.profile.catalogSet.$touch()
                 this.profile.catalogSet.push({petService: {name: null}, price: null, units: null})
             },
+            catalogSetChange() {
+                if (this.$v.profile.catalogSet !== undefined) {
+                    this.$v.profile.catalogSet.$touch()
+
+                    this.errors.catalogSet = []
+                    if (this.$v.profile.catalogSet.$error){
+                        this.errors.catalogSet.push("Требуется указать хотя бы один сервис")
+                    }
+                    if (this.hasError('petService')){
+                        this.errors.catalogSet.push("Требуется указать услугу")
+                    }
+                    if (this.hasError('price')){
+                        this.errors.catalogSet.push("Требуется указать цену")
+                    }
+                    if (this.hasError('units')){
+                        this.errors.catalogSet.push("Требуется указать единицы измерения")
+                    }
+                }
+            },
             saveChanges() {
-                if (!this.$v.$anyError) {
+                if (this.$v.$anyError){
+                    this.$v.profile.name.$touch()
+                    this.$v.profile.phone.$touch()
+                    this.$v.profile.city.$touch()
+
+                    if (this.activePetsitter){
+                        this.$v.profile.animals.$touch()
+                        this.$v.profile.catalogSet.$touch()
+                    }
+                } else {
                     this.profile.avatar = null;
+                    this.profile.catalogSet = this.profile.catalogSet.filter(catalog => {
+                        return catalog.petService.name != null &&
+                            catalog.price != null &&
+                            catalog.units != null
+                    });
+
+                    // eslint-disable-next-line no-console
+                    console.log(this.profile)
                     api.userController.put("", this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
@@ -341,8 +477,24 @@
                         })
                 }
             },
+            hasError(field) {
+                for (var key in this.$v.profile.catalogSet.$each.$iter){
+                    if (this.$v.profile.catalogSet.$each.$iter.hasOwnProperty(key)){
+                        if (this.$v.profile.catalogSet.$each.$iter[key][field].$anyError){
+                            return true
+                        }
+                    }
+                }
+                return false
+            },
             nullSafetyError(obj) {
                 return (obj === undefined || obj === null) ? false : obj.$invalid && obj.$anyDirty
+            },
+            nullSafetyValid(obj) {
+                return (obj === undefined || obj === null) ? false : !obj.$invalid && obj.$anyDirty
+            },
+            nullSafetyValidCatalog(obj) {
+                return (obj === undefined || obj === null) ? false : obj.$anyDirty && this.errors.catalogSet.length === 0
             },
             uploadAvatar() {
                 if (this.file !== null) {
@@ -371,10 +523,6 @@
             if (!this.profile.activePetsitter) {
                 return {
                     profile: {
-                        email: {
-                            required,
-                            email
-                        },
                         name: {
                             required
                         },
@@ -389,10 +537,6 @@
             } else {
                 return {
                     profile: {
-                        email: {
-                            required,
-                            email
-                        },
                         name: {
                             required
                         },
@@ -404,11 +548,23 @@
                         },
                         animals: {
                             required,
-                            notEmpty
+                            notEmptyList
                         },
                         catalogSet: {
                             required,
-                            notEmpty
+                            notEmptyList,
+                            $each: {
+                                price: {
+                                    required
+                                },
+                                units: {
+                                    required
+                                },
+                                petService: {
+                                    required,
+                                    notEmpty
+                                }
+                            }
                         }
                     }
                 }
