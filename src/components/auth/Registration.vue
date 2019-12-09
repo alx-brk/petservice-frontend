@@ -4,17 +4,20 @@
             <v-stepper-step
                     step="1"
                     :complete="currentStepIndex > 1"
-            >Учетные данные</v-stepper-step>
+            >Учетные данные
+            </v-stepper-step>
             <v-divider/>
             <v-stepper-step
                     step="2"
                     :complete="currentStepIndex > 2"
-            >Персональные данные</v-stepper-step>
+            >Персональные данные
+            </v-stepper-step>
             <v-divider/>
             <v-stepper-step
                     step="3"
                     :complete="currentStepIndex > 3"
-            >Данные петситтера</v-stepper-step>
+            >Данные петситтера
+            </v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
             <v-stepper-content :step="currentStepIndex">
@@ -27,10 +30,9 @@
                         @emailInput="emailInput"
                         @passwordInput="passwordInput"
                         @repeatPasswordInput="repeatPasswordInput"
-                        :button-disabled="accountDataInvalid"
-                        @next="currentStepIndex++"
+                        @next="next"
                 ></s1-account-data>
-                <s2-personal-data v-if="currentStepIndex === 2" v-model="currentStep"></s2-personal-data>
+                <s2-personal-data v-if="currentStepIndex === 2"></s2-personal-data>
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
@@ -40,6 +42,7 @@
     import S1AccountData from "./registrationSteps/S1AccountData";
     import S2PersonalData from "./registrationSteps/S2PersonalData";
     import {email, required, sameAs} from "vuelidate/lib/validators";
+    import {registrationValidation} from "../../common/validation";
 
     export default {
         name: "Registration",
@@ -72,40 +75,24 @@
             },
             currentStepIndex: 1
         }),
-        computed: {
-            currentStep() {
-                return this.steps.find(step => step.stepIndex === this.currentStepIndex)
-            },
-            accountDataInvalid() {
-                return (
-                    !this.$v.$anyDirty ||
-                    this.$v.profile.email.$invalid ||
-                    this.$v.profile.password.$invalid ||
-                    this.$v.profile.repeatPassword.$invalid
-                )
-            }
-        },
         methods: {
+            next() {
+                if (this.currentStepIndex === 1) {
+                    if (registrationValidation.accountInvalid(this)) {
+                        registrationValidation.validateAccount(this)
+                    } else {
+                        this.currentStepIndex++
+                    }
+                }
+            },
             emailInput(value) {
-                this.profile.email = value
-                this.$v.profile.email.$touch()
-                this.errors.account.email = (this.$v.profile.email.$invalid) ? ["Требуется указать валидный Email адрес"] : []
+                registrationValidation.inputEmail(this, value)
             },
             passwordInput(value) {
-                this.profile.password = value
-                this.$v.profile.password.$touch()
-                this.errors.account.password = []
-                if (!this.$v.profile.password.required) {
-                    this.errors.account.password.push("Требуется указать пароль")
-                }
-                if (!this.$v.profile.password.strongPassword) {
-                    this.errors.account.password.push("Пароль должен содержать буквы, цифры и специальные символы")
-                }
+                registrationValidation.inputPassword(this, value)
             },
             repeatPasswordInput(value) {
-                this.profile.repeatPassword = value
-                this.$v.profile.repeatPassword.$touch()
-                this.errors.account.repeatPassword = (this.$v.profile.repeatPassword.$invalid) ? ["Повторите пароль"] : []
+                registrationValidation.inputRepeatPassword(this, value)
             },
         },
         validations() {

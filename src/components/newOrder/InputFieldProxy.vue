@@ -2,14 +2,11 @@
     <div>
         <v-row class="flex-row align-center flex-nowrap">
             <v-col :class="fieldClass">
-                <slot name="field"></slot>
+                <slot></slot>
             </v-col>
             <v-col class="d-flex flex-grow-0 flex-shrink-1">
                 <clear-button @clear="onClear"/>
             </v-col>
-        </v-row>
-        <v-row class="flex-row align-center flex-nowrap ma-3">
-            <slot name="alert"></slot>
         </v-row>
     </div>
 </template>

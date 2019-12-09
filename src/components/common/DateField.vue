@@ -13,7 +13,7 @@
         v-model="date"
         locale="ru"
         first-day-of-week="1"
-        @input="updateDate"
+        @change="updateDate"
         scrollable
         :no-title="noTitle"
         landscape

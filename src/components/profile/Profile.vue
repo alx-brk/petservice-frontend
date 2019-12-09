@@ -92,7 +92,7 @@
                     <v-expansion-panel-header :disable-icon-rotate="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
                         <template v-slot:actions v-if="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
                             <v-icon v-if="errors.city.length > 0" color="error">mdi-alert-circle</v-icon>
-                            <v-icon v-if="nullSafetyValid($v.city.animals)" color="teal">mdi-check</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.city)" color="teal">mdi-check</v-icon>
                         </template>
                         <exp-panel-header
                                 field-name="Город"
@@ -297,6 +297,7 @@
 <script>
     import * as api from '../../common/api.js';
     import {required} from 'vuelidate/lib/validators';
+    import {profileValidation} from "../../common/validation";
     import ExpPanelHeader from "./ExpPanelHeader";
 
     const notEmptyList = (array) => array.length > 0;
@@ -376,86 +377,42 @@
         },
         methods: {
             nameInput(value) {
-                this.profile.name = value;
-                this.$v.profile.name.$touch()
-                this.errors.name = (this.$v.profile.name.$invalid) ? ["Требуется указать имя"] : []
+                profileValidation.inputName(this, value)
             },
             phoneInput(value) {
-                this.profile.phone = value
-                this.$v.profile.phone.$touch()
-                this.errors.phone = (this.$v.profile.phone.$invalid) ? ["Требуется указать телефон"] : []
+                profileValidation.inputPhone(this, value)
             },
             cityInput(value) {
-                this.profile.city = value
-                this.$v.profile.city.$touch()
-                this.errors.city = (this.$v.profile.city.$invalid) ? ["Требуется указать город"] : []
+                profileValidation.inputCity(this, value)
             },
             animalsInput(value) {
-                this.profile.animals = value
-                this.$v.profile.animals.$touch()
-                this.errors.animals = (this.$v.profile.animals.$invalid) ? ["Требуется указать хотя бы одно животное"] : []
+                profileValidation.inputAnimals(this, value)
             },
             clearName() {
-                this.profile.name = "";
-                this.$v.profile.name.$touch()
-                this.errors.name = (this.$v.profile.name.$invalid) ? ["Требуется указать имя"] : []
+                profileValidation.clearName(this)
             },
             clearPhone() {
-                this.profile.phone = ""
-                this.$v.profile.phone.$touch()
-                this.errors.phone = (this.$v.profile.phone.$invalid) ? ["Требуется указать телефон"] : []
+                profileValidation.clearPhone(this)
             },
             clearCity() {
-                this.profile.city = null
-                this.$v.profile.city.$touch()
-                this.errors.city = (this.$v.profile.city.$invalid) ? ["Требуется указать город"] : []
+                profileValidation.clearCity(this)
             },
             clearAnimals() {
-                this.profile.animals = []
-                this.$v.profile.animals.$touch()
-                this.errors.animals = (this.$v.profile.animals.$invalid) ? ["Требуется указать хотя бы одно животное"] : []
+                profileValidation.clearAnimals(this)
             },
             clearCatalogSet() {
-                this.profile.catalogSet = []
-                this.$v.profile.catalogSet.$touch()
-                this.errors.catalogSet = []
-                if (this.$v.profile.catalogSet.$error){
-                    this.errors.catalogSet.push("Требуется указать хотя бы один сервис")
-                }
+                profileValidation.clearCatalogSet(this)
             },
             addService() {
                 this.$v.profile.catalogSet.$touch()
                 this.profile.catalogSet.push({petService: {name: null}, price: null, units: null})
             },
             catalogSetChange() {
-                if (this.$v.profile.catalogSet !== undefined) {
-                    this.$v.profile.catalogSet.$touch()
-
-                    this.errors.catalogSet = []
-                    if (this.$v.profile.catalogSet.$error){
-                        this.errors.catalogSet.push("Требуется указать хотя бы один сервис")
-                    }
-                    if (this.hasError('petService')){
-                        this.errors.catalogSet.push("Требуется указать услугу")
-                    }
-                    if (this.hasError('price')){
-                        this.errors.catalogSet.push("Требуется указать цену")
-                    }
-                    if (this.hasError('units')){
-                        this.errors.catalogSet.push("Требуется указать единицы измерения")
-                    }
-                }
+                profileValidation.catalogSetChange(this)
             },
             saveChanges() {
-                if (this.$v.$anyError){
-                    this.$v.profile.name.$touch()
-                    this.$v.profile.phone.$touch()
-                    this.$v.profile.city.$touch()
-
-                    if (this.activePetsitter){
-                        this.$v.profile.animals.$touch()
-                        this.$v.profile.catalogSet.$touch()
-                    }
+                if (this.$v.$invalid){
+                    profileValidation.validateForm(this)
                 } else {
                     this.profile.avatar = null;
                     this.profile.catalogSet = this.profile.catalogSet.filter(catalog => {
@@ -476,16 +433,6 @@
                             console.log(error)
                         })
                 }
-            },
-            hasError(field) {
-                for (var key in this.$v.profile.catalogSet.$each.$iter){
-                    if (this.$v.profile.catalogSet.$each.$iter.hasOwnProperty(key)){
-                        if (this.$v.profile.catalogSet.$each.$iter[key][field].$anyError){
-                            return true
-                        }
-                    }
-                }
-                return false
             },
             nullSafetyError(obj) {
                 return (obj === undefined || obj === null) ? false : obj.$invalid && obj.$anyDirty
