@@ -10,7 +10,7 @@ export default {
             phone: "",
             city: "",
             activePetsitter: false,
-            catalog: [],
+            catalogSet: [],
             animals: [],
             description: "",
             rating: null,
@@ -24,9 +24,6 @@ export default {
     },
     actions: {
         fetchProfile: async ({commit, getters}) => {
-
-            // eslint-disable-next-line no-console
-            console.log("fetchProfile")
             if (getters.profile.id === null) {
                 await api.userController.get("", {
                     params: {

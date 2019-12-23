@@ -13,7 +13,7 @@ const errorMessages = {
     email: ["Требуется указать валидный Email адрес"],
     passwordRequired: ["Требуется указать пароль"],
     passwordStrong: ["Пароль должен содержать буквы, цифры и специальные символы"],
-    repeatPassword: ["Повторите пароль"]
+    repeatPassword: ["Повторите пароль"],
 }
 
 const defaultValues = {
@@ -31,9 +31,9 @@ const defaultValues = {
 }
 
 const hasError = (this_, field) => {
-    for (var key in this_.$v.profile.catalogSet.$each.$iter){
-        if (this_.$v.profile.catalogSet.$each.$iter.hasOwnProperty(key)){
-            if (this_.$v.profile.catalogSet.$each.$iter[key][field].$anyError){
+    for (var key in this_.$v.profile.catalogSet.$each.$iter) {
+        if (this_.$v.profile.catalogSet.$each.$iter.hasOwnProperty(key)) {
+            if (this_.$v.profile.catalogSet.$each.$iter[key][field].$anyError) {
                 return true
             }
         }
@@ -113,7 +113,7 @@ export const orderValidation = {
 
 export const registrationValidation = {
     inputEmail: (this_, value) => {
-        groupInputAction(this_, 'profile', 'account','email', value)
+        groupInputAction(this_, 'profile', 'account', 'email', value)
     },
     inputPassword: (this_, value) => {
         this_.profile.password = value
@@ -127,13 +127,54 @@ export const registrationValidation = {
         }
     },
     inputRepeatPassword: (this_, value) => {
-        groupInputAction(this_, 'profile', 'account','repeatPassword', value)
+        groupInputAction(this_, 'profile', 'account', 'repeatPassword', value)
     },
-    accountInvalid(this_){
+    accountInvalid(this_) {
         return this_.$v.profile.email.$invalid || this_.$v.profile.password.$invalid || this_.$v.profile.repeatPassword.$invalid
     },
+    personalInvalid(this_) {
+        return this_.$v.profile.name.$invalid || this_.$v.profile.phone.$invalid || this_.$v.profile.city.$invalid
+    },
+    petsitterInvalid(this_) {
+        return this_.$v.profile.animals.$invalid ||  this_.$v.profile.catalogSet.$invalid
+    },
+    inputName: (this_, value) => {
+        groupInputAction(this_, 'profile', 'personal', 'name', value)
+    },
+    inputPhone: (this_, value) => {
+        groupInputAction(this_, 'profile', 'personal', 'phone', value)
+    },
+    inputCity: (this_, value) => {
+        groupInputAction(this_, 'profile', 'personal', 'city', value)
+    },
+    inputAnimals: (this_, value) => {
+        groupInputAction(this_, 'profile', 'petsitter', 'animals', value)
+    },
+    inputCatalog: (this_, value) => {
+        this_.profile.catalogSet = value;
+        if (this_.$v.profile.catalogSet !== undefined) {
+            this_.$v.profile.catalogSet.$touch()
+
+            this_.errors.petsitter.catalogSet = defaultValues['catalogSet']
+            if (!this_.$v.profile.catalogSet.notEmptyList) {
+                this_.errors.petsitter.catalogSet = this_.errors.petsitter.catalogSet.concat(errorMessages['catalogSet'])
+            }
+            if (hasError(this_, 'petService')) {
+                this_.errors.petsitter.catalogSet = this_.errors.petsitter.catalogSet.concat(errorMessages['petService'])
+            }
+            if (hasError(this_, 'price')) {
+                this_.errors.petsitter.catalogSet = this_.errors.petsitter.catalogSet.concat(errorMessages['price'])
+            }
+            if (hasError(this_, 'units')) {
+                this_.errors.petsitter.catalogSet = this_.errors.petsitter.catalogSet.concat(errorMessages['units'])
+            }
+        }
+    },
+    inputDescription: (this_, value) => {
+        this_.profile.description = value
+    },
     validateAccount: (this_) => {
-        validateGroupField(this_, 'profile', 'account','email')
+        validateGroupField(this_, 'profile', 'account', 'email')
 
         this_.$v.profile.password.$touch()
         this_.errors.account.password = []
@@ -144,9 +185,18 @@ export const registrationValidation = {
             this_.errors.account.password.push(errorMessages['passwordStrong'])
         }
 
-        validateGroupField(this_, 'profile', 'account','repeatPassword')
+        validateGroupField(this_, 'profile', 'account', 'repeatPassword')
     },
-
+    validatePersonal: (this_) => {
+        validateGroupField(this_, 'profile', 'personal', 'name')
+        validateGroupField(this_, 'profile', 'personal', 'phone')
+        validateGroupField(this_, 'profile', 'personal', 'city')
+    },
+    validatePetsitter: (this_) => {
+        validateGroupField(this_, 'profile', 'petsitter', 'animals')
+        this_.$v.profile.catalogSet.$touch()
+        this_.errors.petsitter.catalogSet = (this_.$v.profile.catalogSet.$invalid) ? errorMessages['catalogSet'] : []
+    },
 }
 
 export const profileValidation = {
@@ -178,7 +228,7 @@ export const profileValidation = {
         this_.profile.catalogSet = defaultValues['catalogSet']
         this_.$v.profile.catalogSet.$touch()
         this_.errors.catalogSet = defaultValues['catalogSet']
-        if (this_.$v.profile.catalogSet.$error){
+        if (!this_.$v.profile.catalogSet.notEmptyList) {
             this_.errors.catalogSet.push(errorMessages['catalogSet'])
         }
     },
@@ -187,17 +237,17 @@ export const profileValidation = {
             this_.$v.profile.catalogSet.$touch()
 
             this_.errors.catalogSet = defaultValues['catalogSet']
-            if (this_.$v.profile.catalogSet.$error){
-                this_.errors.catalogSet.push(errorMessages['catalogSet'])
+            if (!this_.$v.profile.catalogSet.notEmptyList) {
+                this_.errors.catalogSet = this_.errors.catalogSet.concat(errorMessages['catalogSet'])
             }
-            if (hasError('petService')){
-                this_.errors.catalogSet.push(errorMessages['petService'])
+            if (hasError(this_, 'petService')) {
+                this_.errors.catalogSet = this_.errors.catalogSet.concat(errorMessages['petService'])
             }
-            if (hasError('price')){
-                this_.errors.catalogSet.push(errorMessages['price'])
+            if (hasError(this_, 'price')) {
+                this_.errors.catalogSet = this_.errors.catalogSet.concat(errorMessages['price'])
             }
-            if (hasError('units')){
-                this_.errors.catalogSet.push(errorMessages['units'])
+            if (hasError(this_, 'units')) {
+                this_.errors.catalogSet = this_.errors.catalogSet.concat(errorMessages['units'])
             }
         }
     },

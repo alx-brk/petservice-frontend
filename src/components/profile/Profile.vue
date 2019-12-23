@@ -32,10 +32,10 @@
                       full-icon="mdi-star"
                       half-increments
                       readonly
-              ></v-rating>
+              />
             </span>
                     </template>
-                    <span v-text="'Рейтинг петситтера ' + profile.rating"></span>
+                    <span v-text="'Рейтинг петситтера ' + profile.rating"/>
                 </v-tooltip>
             </v-flex>
         </v-layout>
@@ -45,7 +45,8 @@
         <v-row align="center">
             <v-expansion-panels popout focusable>
                 <v-expansion-panel>
-                    <v-expansion-panel-header :disable-icon-rotate="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
                         <template v-slot:actions v-if="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
                             <v-icon v-if="errors.name.length > 0" color="error">mdi-alert-circle</v-icon>
                             <v-icon v-if="nullSafetyValid($v.profile.name)" color="teal">mdi-check</v-icon>
@@ -67,7 +68,8 @@
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header :disable-icon-rotate="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
                         <template v-slot:actions v-if="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
                             <v-icon v-if="errors.phone.length > 0" color="error">mdi-alert-circle</v-icon>
                             <v-icon v-if="nullSafetyValid($v.profile.phone)" color="teal">mdi-check</v-icon>
@@ -89,7 +91,8 @@
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header :disable-icon-rotate="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
                         <template v-slot:actions v-if="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
                             <v-icon v-if="errors.city.length > 0" color="error">mdi-alert-circle</v-icon>
                             <v-icon v-if="nullSafetyValid($v.profile.city)" color="teal">mdi-check</v-icon>
@@ -126,8 +129,10 @@
 
             <v-expansion-panels popout focusable :disabled="!profile.activePetsitter">
                 <v-expansion-panel>
-                    <v-expansion-panel-header :disable-icon-rotate="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
-                        <template v-slot:actions v-if="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                        <template v-slot:actions
+                                  v-if="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
                             <v-icon v-if="errors.animals.length > 0" color="error">mdi-alert-circle</v-icon>
                             <v-icon v-if="nullSafetyValid($v.profile.animals)" color="teal">mdi-check</v-icon>
                         </template>
@@ -154,7 +159,8 @@
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header :disable-icon-rotate="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
                         <template v-slot:actions v-if="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
                             <v-icon v-if="showAlert" color="error">mdi-alert-circle</v-icon>
                             <v-icon v-if="nullSafetyValidCatalog($v.profile.catalogSet)" color="teal">mdi-check</v-icon>
@@ -167,60 +173,11 @@
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                        <v-simple-table fixed-header>
-                            <thead>
-                            <tr>
-                                <th class="text-left">Услуга</th>
-                                <th colspan="2" class="text-left">Цена</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(option, i) in profile.catalogSet" :key="i">
-                                <td>
-                                    <v-select
-                                            :items="services"
-                                            item-text="name"
-                                            v-model="option.petService"
-                                            @change="catalogSetChange"
-                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
-                                            return-object
-                                    />
-                                </td>
-                                <td>
-                                    <v-text-field
-                                            type="number"
-                                            v-model="option.price"
-                                            @change="catalogSetChange"
-                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
-                                    />
-                                </td>
-                                <td>
-                                    <v-select
-                                            :items="units"
-                                            v-model="option.units"
-                                            @change="catalogSetChange"
-                                            :class="{'v-input--has-state error--text': errors.catalogSet.length > 0}"
-                                    />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </v-simple-table>
-                        <div class="ma-3">
-                            <span
-                                    v-for="(error, i) in errors.catalogSet"
-                                    :key="i"
-                                    class="v-text-field__details v-messages theme--light error--text v-messages__wrapper v-messages__message"
-                                    v-text="error"
-                            />
-                        </div>
-                        <v-btn
-                                class="ma-3"
-                                @click="addService"
-                                color="primary"
-                        >
-                            <v-icon left>mdi-plus-circle</v-icon>
-                            Добавить
-                        </v-btn>
+                        <catalog-set-input
+                            :catalog="profile.catalogSet"
+                            :errors="errors"
+                            @catalogSetChange="catalogSetChange"
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
@@ -237,7 +194,7 @@
                         <v-textarea
                                 v-model="profile.description"
                                 auto-grow
-                        ></v-textarea>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
@@ -299,14 +256,16 @@
     import {required} from 'vuelidate/lib/validators';
     import {profileValidation} from "../../common/validation";
     import ExpPanelHeader from "./ExpPanelHeader";
+    import CatalogSetInput from "../common/CatalogSetInput";
 
     const notEmptyList = (array) => array.length > 0;
-    const notEmpty = (value) => value.id !== null && value.name != null
+    const notEmpty = (value) => value !== undefined && value.id !== null && value.name != null
 
     export default {
         name: "Profile",
         components: {
-            'exp-panel-header': ExpPanelHeader
+            'exp-panel-header': ExpPanelHeader,
+            'catalog-set-input': CatalogSetInput
         },
         data: () => ({
             profile: {
@@ -371,8 +330,7 @@
                 return (this.profile.city === undefined || this.profile.city == null) ? '' : this.profile.city.name
             },
             showAlert() {
-                return (this.$v.profile.catalogSet !== undefined && this.$v.profile.catalogSet.$anyError) ||
-                        this.errors.catalogSet > 0
+                return this.errors.catalogSet > 0
             },
         },
         methods: {
@@ -403,15 +361,12 @@
             clearCatalogSet() {
                 profileValidation.clearCatalogSet(this)
             },
-            addService() {
-                this.$v.profile.catalogSet.$touch()
-                this.profile.catalogSet.push({petService: {name: null}, price: null, units: null})
-            },
-            catalogSetChange() {
+            catalogSetChange(value) {
+                this.profile.catalogSet = value
                 profileValidation.catalogSetChange(this)
             },
             saveChanges() {
-                if (this.$v.$invalid){
+                if (this.$v.$invalid) {
                     profileValidation.validateForm(this)
                 } else {
                     this.profile.avatar = null;
@@ -421,8 +376,6 @@
                             catalog.units != null
                     });
 
-                    // eslint-disable-next-line no-console
-                    console.log(this.profile)
                     api.userController.put("", this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
@@ -463,8 +416,6 @@
         },
         mounted() {
             this.profile = this.$store.getters.profile
-            // eslint-disable-next-line no-console
-            console.log("mounted profile")
         },
         validations() {
             if (!this.profile.activePetsitter) {
