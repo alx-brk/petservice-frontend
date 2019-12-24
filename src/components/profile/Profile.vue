@@ -379,6 +379,8 @@
                     api.userController.put("", this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
+                            console.log('response on profile update')
+                            // eslint-disable-next-line no-console
                             console.log(response.data)
                         })
                         .catch((error) => {
@@ -405,6 +407,8 @@
                         .then((response) => {
                             this.profile.avatar = response.data
                             // eslint-disable-next-line no-console
+                            console.log('response on image upload')
+                            // eslint-disable-next-line no-console
                             console.log(response.data)
                         })
                         .catch((error) => {
@@ -415,7 +419,7 @@
             }
         },
         mounted() {
-            this.profile = this.$store.getters.profile
+            this.profile = JSON.parse(localStorage.getItem('currentUser'))
         },
         validations() {
             if (!this.profile.activePetsitter) {

@@ -150,7 +150,7 @@
             },
         },
         mounted() {
-            this.profile = this.$store.getters.profile;
+            this.profile = JSON.parse(localStorage.getItem('currentUser'))
             this.order.city = this.profile.city;
             this.order.client = this.profile;
         },
@@ -191,6 +191,8 @@
                 } else {
                     api.jobController.post("", this.order)
                         .then((response) => {
+                            // eslint-disable-next-line no-console
+                            console.log('response of order creation')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
                         })

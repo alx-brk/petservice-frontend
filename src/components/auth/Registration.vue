@@ -72,6 +72,7 @@
     import {email, required, sameAs} from "vuelidate/lib/validators";
     import {registrationValidation} from "../../common/validation";
     import * as api from "../../common/api";
+    import UserService from "../../services/UserService";
 
     const notEmptyList = (array) => array.length > 0;
     const notEmpty = (value) => value.id !== null && value.name != null
@@ -140,12 +141,15 @@
                         this.animals = []
                     }
 
-                    api.userController.post("", this.profile)
+                    UserService.registration(this.profile)
                         .then((response) => {
+                            // eslint-disable-next-line no-console
+                            console.log('response on registration')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
                             this.profile.id = response.data.id
                             this.uploadAvatar()
+                            this.$router.push('/profile')
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console
@@ -162,6 +166,8 @@
 
                     api.imageController.post("/" + this.profile.id, formData)
                         .then((response) => {
+                            // eslint-disable-next-line no-console
+                            console.log('response on image upload')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
                         })

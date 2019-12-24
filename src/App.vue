@@ -66,8 +66,8 @@
     </v-card>
     <v-app-bar app clipped-right>
       <v-app-bar-nav-icon
-          @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+              @click.stop="drawer = !drawer"
+      />
       <v-toolbar flat>
         <v-toolbar-title>Petservice</v-toolbar-title>
         <v-spacer/>
@@ -77,6 +77,7 @@
               v-for="link in links"
               :to="link.url"
               :key="link.title"
+              @click="link.click"
           >
             <v-icon left v-text="link.icon"/>
             {{link.title}}
@@ -93,23 +94,25 @@
 
 <script>
 
+    import UserService from "./services/UserService";
+
     export default {
         name: 'App',
         components: {},
         data: () => ({
             drawer: false,
             links: [
-                {title: 'Выйти', icon: 'mdi-exit-to-app', 'url': '/'}
+                {title: 'Выйти', icon: 'mdi-exit-to-app', url: '/', click: UserService.logout}
             ],
             activeItem: null,
             clientMenu: [
-                {title: 'Мои заказы', icon: 'mdi-paw', 'url': '/client-orders'},
-                {title: 'Создать заказ', icon: 'mdi-briefcase-plus', 'url': '/new-order'},
-                {title: 'Поиск петситтера', icon: 'mdi-account-search', 'url': '/petsitters-search'}
+                {title: 'Мои заказы', icon: 'mdi-paw', url: '/client-orders'},
+                {title: 'Создать заказ', icon: 'mdi-briefcase-plus', url: '/new-order'},
+                {title: 'Поиск петситтера', icon: 'mdi-account-search', url: '/petsitters-search'}
             ],
             petsitterMenu: [
-                {title: 'Мои заказы', icon: 'mdi-briefcase', 'url': '/petsitter-orders'},
-                {title: 'Поиск заказа', icon: 'mdi-briefcase-search', 'url': '/orders-search'}
+                {title: 'Мои заказы', icon: 'mdi-briefcase', url: '/petsitter-orders'},
+                {title: 'Поиск заказа', icon: 'mdi-briefcase-search', url: '/orders-search'}
             ],
         }),
         created() {
@@ -117,7 +120,6 @@
             this.$store.dispatch('initServices');
             this.$store.dispatch('initCities');
             this.$store.dispatch('initUnits');
-            this.$store.dispatch('fetchProfile');
             this.$store.dispatch('initStatuses');
         }
     };

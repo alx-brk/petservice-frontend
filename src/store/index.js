@@ -4,7 +4,6 @@ import cities from "./cities";
 import animals from "./animals";
 import services from "./services";
 import units from "./units";
-import profile from "./profile";
 import jobStatuses from "./jobStatuses";
 
 Vue.use(Vuex)
@@ -15,7 +14,6 @@ export default new Vuex.Store({
         animals,
         services,
         units,
-        profile,
         jobStatuses
     }
 })

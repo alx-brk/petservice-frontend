@@ -38,7 +38,7 @@
             profile: null
         }),
         mounted() {
-            this.profile = this.$store.getters.profile
+            this.profile = JSON.parse(localStorage.getItem('currentUser'))
             api.jobController.get("/petsitter-orders", {
                 params: {
                     id: this.profile.id
