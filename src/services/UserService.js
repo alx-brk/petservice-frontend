@@ -1,8 +1,8 @@
 import {BehaviorSubject} from 'rxjs';
-import * as api from '../common/api';
 import axios from 'axios';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+const baseUrl = 'http://localhost:8090/user'
 
 class UserService {
     get currentUserValue(){
@@ -14,25 +14,25 @@ class UserService {
 
     login(user){
         return axios.create({
-            baseURL: 'http://localhost:8090',
+            baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true,
                 'Authorization': 'Basic ' + btoa(user.email + ':' + user.password)
             }
-        }).get('/user/login')
+        }).get('/login')
     }
 
     logout(){
         // eslint-disable-next-line no-console
         console.log("logout")
         axios.create({
-            baseURL: 'http://localhost:8090',
+            baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true
             }
-        }).post('/user/logout', {})
+        }).post('/logout', {})
             .then((response) => {
                 // eslint-disable-next-line no-console
                 console.log('response on logout');
@@ -49,7 +49,13 @@ class UserService {
     }
 
     registration(user){
-        return api.userController.post('', JSON.stringify(user));
+        return axios.create({
+            baseURL: baseUrl,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true
+            }
+        }).post('', JSON.stringify(user));
     }
 
     nextUserSubject(user){

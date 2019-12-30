@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-text-field
-        :value="value"
-        :label="label"
-        @click="showPicker=true"
-        :prepend-icon="icon"
-        class="pr-3"
-        readonly
-    ></v-text-field>
+            :value="value"
+            :label="label"
+            @click="showPicker=true"
+            :prepend-icon="icon"
+            class="pr-3"
+            readonly
+    />
     <v-date-picker
         v-show="showPicker"
         v-model="date"

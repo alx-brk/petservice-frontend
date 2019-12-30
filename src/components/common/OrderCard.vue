@@ -4,14 +4,14 @@
       <div class="pa-3 mt-0 flex-row d-flex align-center">
         <span class="text--secondary">Клиент:</span>
         <person-card
-            :person="order.client"
-        ></person-card>
+                :person="order.client"
+        />
       </div>
       <div class="pa-3 mt-0 flex-row d-flex align-center">
         <span class="text--secondary">Петситтер:</span>
         <person-card
-            :person="order.petsitter"
-        ></person-card>
+                :person="order.petsitter"
+        />
       </div>
       <div class="pa-3 mt-0 flex-row d-flex align-center">
         <span class="text--secondary mr-3">Статус:</span>
@@ -30,16 +30,16 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-wrap flex-column pa-3 mt-0 ml-3">
         <span class="text--secondary">Животные</span>
         <readonly-chip-group
-            :all-items="order.animals"
-            :selected-items="selectedAnimals"
-        ></readonly-chip-group>
+                :all-items="order.animals"
+                :selected-items="selectedAnimals"
+        />
       </v-col>
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="order.petServices"
-            :selected-items="selectedServices"
-        ></readonly-chip-group>
+                :all-items="order.petServices"
+                :selected-items="selectedServices"
+        />
       </v-col>
       <v-col xl="7" lg="7" md="7" sm="12" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Описание</span>

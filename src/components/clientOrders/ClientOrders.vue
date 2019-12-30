@@ -1,20 +1,20 @@
 <template>
-  <v-container>
-    <div class="flex-wrap ma-3 flex-column align-start"
-         v-for="order in orders"
-         :key="order.id"
-    >
-      <order-card
-          :order="order"
-          :selected-items-container="order.petsitter"
-      ></order-card>
-    </div>
-  </v-container>
+    <v-container>
+        <div class="flex-wrap ma-3 flex-column align-start"
+             v-for="order in orders"
+             :key="order.id"
+        >
+          <order-card
+                  :order="order"
+                  :selected-items-container="order.petsitter"
+          />
+        </div>
+    </v-container>
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
     import OrderCard from "../common/OrderCard";
+    import JobService from "../../services/JobService";
 
     export default {
         name: "ClientOrders",
@@ -22,18 +22,14 @@
             'order-card': OrderCard
         },
         data: () => ({
-            orders: [
-            ],
+            orders: [],
             profile: null
         }),
         methods: {},
         mounted() {
             this.profile = JSON.parse(localStorage.getItem('currentUser'))
-            api.jobController.get("/client-orders", {
-                params: {
-                    id: this.profile.id
-                }
-            })
+
+            JobService.fetchClientOrders(this.profile.id)
                 .then((response) => {
                     this.orders = response.data
                 })

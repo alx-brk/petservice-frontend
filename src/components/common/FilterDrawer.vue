@@ -169,6 +169,7 @@
 <script>
     import DateField from "./DateField";
     import ClearButton from "./ClearButton";
+    import FilterOptions from "../../model/FilterOptions";
 
     export default {
         name: "FilterDrawer",
@@ -185,16 +186,7 @@
         data: () => ({
             drawer: true,
             mini: true,
-            filterOptions: {
-                city: null,
-                animals: [],
-                petServices: [],
-                startDate: null,
-                endDate: null,
-                creationDate: null,
-                rating: null,
-                jobStatus: null
-            }
+            filterOptions: new FilterOptions()
         }),
         computed: {
             cities() {
@@ -221,30 +213,13 @@
         },
         methods: {
             updateFilterOptions() {
-                const options = {
-                    city: this.filterOptions.city,
-                    animals: this.filterOptions.animals,
-                    petServices: this.filterOptions.petServices,
-                    startDate: this.filterOptions.startDate,
-                    endDate: this.filterOptions.endDate,
-                    creationDate: this.filterOptions.creationDate,
-                    rating: this.filterOptions.rating,
-                    jobStatus: this.filterOptions.jobStatus
-                }
-                this.$emit('input', options)
+                this.$emit('input', this.filterOptions)
             },
             search() {
                 this.$emit('search')
             },
             clearFilterOptions() {
-                this.filterOptions.city = null
-                this.filterOptions.animals = []
-                this.filterOptions.petServices = []
-                this.filterOptions.startDate = null
-                this.filterOptions.endDate = null
-                this.filterOptions.creationDate = null
-                this.filterOptions.rating = null
-                this.filterOptions.jobStatus = null
+                this.filterOptions = new FilterOptions()
                 this.updateFilterOptions()
             },
             updateStartDate(value) {

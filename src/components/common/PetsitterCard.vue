@@ -5,10 +5,10 @@
         <span class="text--secondary">Петситтер:</span>
         <v-list-item>
           <v-list-item-avatar>
-            <v-img :src="avatarLink"></v-img>
+            <v-img :src="avatarLink"/>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title v-text="profile.name"></v-list-item-title>
+            <v-list-item-title v-text="profile.name"/>
           </v-list-item-content>
         </v-list-item>
       </div>
@@ -17,16 +17,16 @@
           <template #activator="{ on }">
             <span v-on="on">
               <v-rating
-                  v-model="profile.rating"
-                  empty-icon="mdi-star-outline"
-                  half-icon="mdi-star-half"
-                  full-icon="mdi-star"
-                  half-increments
-                  readonly
-              ></v-rating>
+                      v-model="profile.rating"
+                      empty-icon="mdi-star-outline"
+                      half-icon="mdi-star-half"
+                      full-icon="mdi-star"
+                      half-increments
+                      readonly
+              />
             </span>
           </template>
-          <span v-text="'Рейтинг петситтера ' + profile.rating"></span>
+          <span v-text="'Рейтинг петситтера ' + profile.rating"/>
         </v-tooltip>
       </div>
     </div>
@@ -35,17 +35,17 @@
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-wrap flex-column pa-3 mt-0 ml-3">
         <span class="text--secondary">Животные</span>
         <readonly-chip-group
-            :all-items="profile.animals"
-            :selected-items="selectedAnimals"
-        ></readonly-chip-group>
+                :all-items="profile.animals"
+                :selected-items="selectedAnimals"
+        />
       </v-col>
       <v-col xl="2" lg="2" md="2" sm="5" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Услуги</span>
         <readonly-chip-group
-            :all-items="profile.catalogSet"
-            :selected-items="selectedServices"
-            entity="catalog"
-        ></readonly-chip-group>
+                :all-items="profile.catalogSet"
+                :selected-items="selectedServices"
+                entity="catalog"
+        />
       </v-col>
       <v-col xl="7" lg="7" md="7" sm="12" xs="12" class="d-flex flex-column flex-wrap pa-3 mt-0 ml-3">
         <span class="text--secondary">Описание</span>

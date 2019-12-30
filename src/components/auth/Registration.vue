@@ -71,8 +71,8 @@
     import S3PetsitterData from "./registrationSteps/S3PetsitterData";
     import {email, required, sameAs} from "vuelidate/lib/validators";
     import {registrationValidation} from "../../common/validation";
-    import * as api from "../../common/api";
     import UserService from "../../services/UserService";
+    import ImageService from "../../services/ImageService";
 
     const notEmptyList = (array) => array.length > 0;
     const notEmpty = (value) => value.id !== null && value.name != null
@@ -158,13 +158,11 @@
                 }
             },
             uploadAvatar() {
-                if (this.file.name !== undefined) {
+                if (this.file.name) {
                     // eslint-disable-next-line no-console
                     console.log("send photo")
-                    const formData = new FormData();
-                    formData.append("file", this.file);
 
-                    api.imageController.post("/" + this.profile.id, formData)
+                    ImageService.upload(this.profile.id, this.file)
                         .then((response) => {
                             // eslint-disable-next-line no-console
                             console.log('response on image upload')

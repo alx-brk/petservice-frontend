@@ -94,11 +94,12 @@
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
     import {required} from 'vuelidate/lib/validators'
     import {orderValidation} from "../../common/validation";
     import DateField from "../common/DateField";
     import InputFieldProxy from "./InputFieldProxy";
+    import JobService from "../../services/JobService";
+    import Job from "../../model/Job";
 
     const startDateValidator = (startDate) => {
         return (startDate === null || startDate === '') ? true :
@@ -118,18 +119,7 @@
         },
         data: () => ({
             profile: null,
-            order: {
-                id: null,
-                city: {name: null},
-                client: null,
-                petsitter: null,
-                jobStatus: "Новый",
-                animals: [],
-                petServices: [],
-                startDate: null,
-                endDate: null,
-                description: null
-            },
+            order: new Job(),
             errors: {
                 city: [],
                 animals: [],
@@ -189,7 +179,7 @@
                 if (this.$v.$invalid){
                     orderValidation.validateForm(this)
                 } else {
-                    api.jobController.post("", this.order)
+                    JobService.createOrder(this.order)
                         .then((response) => {
                             // eslint-disable-next-line no-console
                             console.log('response of order creation')
