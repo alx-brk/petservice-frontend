@@ -1,4 +1,4 @@
-import * as api from "../common/api";
+import JobService from "../services/JobService";
 
 export default {
     state: {
@@ -12,7 +12,7 @@ export default {
     actions: {
         initUnits: async ({commit, getters}) => {
             if (getters.units.length === 0) {
-                await api.jobController.get("/units/all")
+                await JobService.fetchUnits()
                     .then((response) => {
                         commit('SET_UNITS', response.data)
                     })

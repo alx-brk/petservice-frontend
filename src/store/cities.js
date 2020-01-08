@@ -1,4 +1,4 @@
-import * as api from "../common/api";
+import CityService from "../services/CityService";
 
 export default {
     state: {
@@ -12,7 +12,7 @@ export default {
     actions: {
         initCities: async ({commit, getters}) => {
             if (getters.cities.length === 0) {
-                await api.cityController.get("/all")
+                await CityService.fetchAll()
                     .then((response) => {
                         commit('SET_CITIES', response.data)
                     })

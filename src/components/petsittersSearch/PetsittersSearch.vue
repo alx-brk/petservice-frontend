@@ -1,23 +1,24 @@
 <template>
   <v-container>
     <filter-drawer
-        type="petsitterSearch"
-        @input="updateFilterOptions"
-        @search="search"
-    ></filter-drawer>
+            type="petsitterSearch"
+            @input="updateFilterOptions"
+            @search="search"
+    />
     <petsitter-card
-        v-for="profile in searchResults"
-        :key="profile.id"
-        :profile="profile"
-        :selected-items-container="filterOptions"
-    ></petsitter-card>
+            v-for="profile in searchResults"
+            :key="profile.id"
+            :profile="profile"
+            :selected-items-container="filterOptions"
+    />
   </v-container>
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
     import FilterDrawer from "../common/FilterDrawer";
     import PetsitterCard from "../common/PetsitterCard";
+    import FilterOptions from "../../model/FilterOptions";
+    import UserService from "../../services/UserService";
 
     export default {
         name: "PetsittersSearch",
@@ -28,18 +29,11 @@
         data: () => ({
             searchResults: [
             ],
-            filterOptions: {
-                city: null,
-                animals: [],
-                petServices: [],
-                rating: null
-            }
+            filterOptions: new FilterOptions()
         }),
-        mounted() {
-        },
         methods: {
             search() {
-                api.userController.post("/search", this.filterOptions)
+                UserService.search(this.filterOptions)
                     .then((response) => {
                         this.searchResults = response.data
                     })

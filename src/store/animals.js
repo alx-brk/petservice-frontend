@@ -1,4 +1,4 @@
-import * as api from '../common/api.js';
+import AnimalService from "../services/AnimalService";
 
 export default {
     state: {
@@ -12,7 +12,7 @@ export default {
     actions: {
         initAnimals: async ({commit, getters}) => {
             if (getters.animals.length === 0) {
-                await api.animalController.get("/all")
+                await AnimalService.fetchAll()
                     .then((response) => {
                         commit('SET_ANIMALS', response.data)
                     })

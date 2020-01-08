@@ -57,6 +57,7 @@
 
 <script>
     import ReadonlyChipGroup from "./ReadonlyChipGroup";
+    import ImageService from "../../services/ImageService";
 
     export default {
         name: "PetsitterCard",
@@ -82,9 +83,7 @@
                     []
             },
             avatarLink() {
-                return (this.profile.avatar !== null) ?
-                    "http://localhost:8090/image/" + this.profile.avatar.id :
-                    require('@/assets/paw_icon.png');
+                return ImageService.avatarLink(this.profile.avatar)
             }
         }
     }

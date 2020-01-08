@@ -1,4 +1,4 @@
-import * as api from "../common/api";
+import PetServiceService from "../services/PetServiceService";
 
 export default {
     state: {
@@ -12,7 +12,7 @@ export default {
     actions: {
         initServices: async ({commit, getters}) => {
             if (getters.services.length === 0) {
-                await api.serviceController.get("/all")
+                await PetServiceService.fetchAll()
                     .then((response) => {
                         commit('SET_SERVICES', response.data)
                     })

@@ -1,4 +1,4 @@
-import * as api from "../common/api";
+import JobService from "../services/JobService";
 
 export default {
     state: {
@@ -12,7 +12,7 @@ export default {
     actions: {
         initStatuses: async ({commit, getters}) => {
             if (getters.jobStatuses.length === 0) {
-                await api.jobController.get("/statuses/all")
+                await JobService.fetchJobStatuses()
                     .then((response) => {
                         commit('SET_STATUSES', response.data)
                     })

@@ -16,6 +16,12 @@ class ImageService {
             }
         }).post('/' + id, formData)
     }
+
+    avatarLink(avatar){
+        return (avatar) ?
+            "http://localhost:8090/image/" + avatar.id :
+            require('@/assets/paw_icon.png');
+    }
 }
 
 export default new ImageService();

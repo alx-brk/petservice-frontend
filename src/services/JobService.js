@@ -19,6 +19,22 @@ class JobService {
         }).get('/client-orders', config);
     }
 
+    fetchPetsitterOrders(id){
+        const config = {
+            params: {
+                id: id
+            }
+        };
+
+        return axios.create({
+            baseURL: baseUrl,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true
+            }
+        }).get('/petsitter-orders', config);
+    }
+
     createOrder(job){
         return axios.create({
             baseURL: baseUrl,
@@ -37,6 +53,26 @@ class JobService {
                 'Access-Control-Allow-Origin': true
             }
         }).post('/search', JSON.stringify(filterOptions))
+    }
+
+    fetchJobStatuses(){
+        return axios.create({
+            baseURL: baseUrl,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true
+            }
+        }).get('/statuses/all')
+    }
+
+    fetchUnits(){
+        return axios.create({
+            baseURL: baseUrl,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true
+            }
+        }).get('/units/all')
     }
 }
 

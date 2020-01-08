@@ -252,11 +252,13 @@
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
     import {required} from 'vuelidate/lib/validators';
     import {profileValidation} from "../../common/validation";
     import ExpPanelHeader from "./ExpPanelHeader";
     import CatalogSetInput from "../common/CatalogSetInput";
+    import User from "../../model/User";
+    import UserService from "../../services/UserService";
+    import ImageService from "../../services/ImageService";
 
     const notEmptyList = (array) => array.length > 0;
     const notEmpty = (value) => value !== undefined && value.id !== null && value.name != null
@@ -268,20 +270,7 @@
             'catalog-set-input': CatalogSetInput
         },
         data: () => ({
-            profile: {
-                id: null,
-                avatar: null,
-                email: "",
-                name: "",
-                phone: "",
-                city: "",
-                activePetsitter: false,
-                catalogSet: [],
-                animals: [],
-                description: "",
-                rating: null,
-                feedback: []
-            },
+            profile: new User(),
             errors: {
                 name: [],
                 phone: [],
@@ -310,9 +299,7 @@
                 }
             },
             avatarLink() {
-                return (this.profile.avatar !== null) ?
-                    "http://localhost:8090/image/" + this.profile.avatar.id :
-                    require('@/assets/paw_icon.png');
+                return ImageService.avatarLink(this.profile.avatar)
             },
             cities() {
                 return this.$store.getters.cities
@@ -376,7 +363,7 @@
                             catalog.units != null
                     });
 
-                    api.userController.put("", this.profile)
+                    UserService.updateProfile(this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
                             console.log('response on profile update')
@@ -400,10 +387,7 @@
             },
             uploadAvatar() {
                 if (this.file !== null) {
-                    const formData = new FormData();
-                    formData.append("file", this.file);
-
-                    api.imageController.post("/" + this.profile.id, formData)
+                    ImageService.upload(this.profile.id, this.file)
                         .then((response) => {
                             this.profile.avatar = response.data
                             // eslint-disable-next-line no-console

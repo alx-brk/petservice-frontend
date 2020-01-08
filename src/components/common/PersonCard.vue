@@ -11,6 +11,8 @@
 </template>
 
 <script>
+    import ImageService from "../../services/ImageService";
+
     export default {
         name: "PersonCard",
         props: {
@@ -26,9 +28,7 @@
                 return this.person != null
             },
             avatarLink() {
-                return (this.person.avatar !== null) ?
-                    "http://localhost:8090/image/" + this.person.avatar.id :
-                    require('@/assets/paw_icon.png');
+                return ImageService.avatarLink(this.person.avatar)
             },
         }
     }
