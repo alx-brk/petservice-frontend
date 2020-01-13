@@ -1,4 +1,5 @@
 import axios from 'axios';
+import UserService from "./UserService";
 
 const baseUrl = 'http://localhost:8090/job'
 
@@ -14,7 +15,8 @@ class JobService {
             baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true
+                'Access-Control-Allow-Origin': true,
+                'Authorization': 'Basic ' + UserService.currentUserValue.token
             }
         }).get('/client-orders', config);
     }

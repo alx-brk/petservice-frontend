@@ -12,6 +12,7 @@ import ErrorPage from "../components/auth/ErrorPage";
 import Role from "../model/Role";
 import UserService from "../services/UserService";
 import jwtDecode from 'jwt-decode'
+import Home from "../components/home/Home";
 
 Vue.use(VueRouter)
 
@@ -20,7 +21,7 @@ const router = new VueRouter({
         {
             path: '/',
             name: 'home',
-            component: Profile
+            component: Home
         },
         {
             path: '/client-orders',
@@ -104,7 +105,8 @@ router.beforeEach((to, from, next) => {
         if (roles.length && !roles.includes(jwtObject.roles)){
             // eslint-disable-next-line no-console
             console.log("to 401")
-            return next({path: '/error/401'})
+            localStorage.removeItem('currentUser');
+            return next({path: '/login'})
         }
     }
     next();

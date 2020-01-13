@@ -46,7 +46,7 @@
             }
         },
         mounted() {
-            if (this.value !== undefined){
+            if (this.value){
                 this.date = this.value
             }
         }

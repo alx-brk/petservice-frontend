@@ -69,13 +69,10 @@
     import S1AccountData from "./registrationSteps/S1AccountData";
     import S2PersonalData from "./registrationSteps/S2PersonalData";
     import S3PetsitterData from "./registrationSteps/S3PetsitterData";
-    import {email, required, sameAs} from "vuelidate/lib/validators";
-    import {registrationValidation} from "../../common/validation";
+    import {registrationValidation, validationConfigs} from "../../common/validation";
     import UserService from "../../services/UserService";
     import ImageService from "../../services/ImageService";
-
-    const notEmptyList = (array) => array.length > 0;
-    const notEmpty = (value) => value.id !== null && value.name != null
+    import User from "../../model/User";
 
     export default {
         name: "Registration",
@@ -85,21 +82,7 @@
             's3-petsitter-data': S3PetsitterData,
         },
         data: () => ({
-            profile: {
-                avatar: null,
-                email: "",
-                password: "",
-                repeatPassword: "",
-                name: "",
-                phone: "",
-                city: "",
-                activePetsitter: false,
-                catalogSet: [],
-                animals: [],
-                description: "",
-                rating: null,
-                feedback: []
-            },
+            profile: new User(),
             file: [],
             errors: {
                 account: {
@@ -132,9 +115,7 @@
 
                     if (this.profile.activePetsitter) {
                         this.profile.catalogSet = this.profile.catalogSet.filter(catalog => {
-                            return catalog.petService.name != null &&
-                                catalog.price != null &&
-                                catalog.units != null
+                            return !!catalog.petService.name && !!catalog.price && !!catalog.units
                         });
                     } else {
                         this.catalogSet = []
@@ -235,58 +216,7 @@
             }
         },
         validations() {
-            return {
-                profile: {
-                    email: {
-                        required,
-                        email
-                    },
-                    password: {
-                        required,
-                        strongPassword(password) {
-                            return (
-                                /[a-z]/.test(password) && // checks for a-z
-                                /[0-9]/.test(password) && // checks for 0-9
-                                /\W|_/.test(password) && // checks for special char
-                                password.length >= 6
-                            );
-                        }
-                    },
-                    repeatPassword: {
-                        required,
-                        sameAsPassword: sameAs("password")
-                    },
-                    name: {
-                        required
-                    },
-                    phone: {
-                        required
-                    },
-                    city: {
-                        required
-                    },
-                    animals: {
-                        required,
-                        notEmptyList
-                    },
-                    catalogSet: {
-                        required,
-                        notEmptyList,
-                        $each: {
-                            price: {
-                                required
-                            },
-                            units: {
-                                required
-                            },
-                            petService: {
-                                required,
-                                notEmpty
-                            }
-                        }
-                    }
-                }
-            }
+            return validationConfigs.registration();
         }
     }
 </script>

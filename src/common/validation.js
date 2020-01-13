@@ -1,3 +1,5 @@
+import {email, required, sameAs} from "vuelidate/lib/validators";
+
 const errorMessages = {
     city: ["Требуется указать город"],
     animals: ["Требуется указать хотя бы одно животное"],
@@ -29,6 +31,16 @@ const defaultValues = {
     password: '',
     repeatPassword: '',
 }
+
+const notEmptyList = (array) => array.length > 0;
+const notEmpty = (value) => !!value && !!value.id && !!value.name
+const startDateValidator = (startDate) => {
+    return (startDate) ? true :
+        startDate >= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).toISOString()
+};
+const endDateValidator = (endDate, vm) => {
+    return (endDate) ? true : endDate > vm.startDate
+};
 
 const hasError = (this_, field) => {
     for (var key in this_.$v.profile.catalogSet.$each.$iter) {
@@ -136,7 +148,7 @@ export const registrationValidation = {
         return this_.$v.profile.name.$invalid || this_.$v.profile.phone.$invalid || this_.$v.profile.city.$invalid
     },
     petsitterInvalid(this_) {
-        return this_.$v.profile.animals.$invalid ||  this_.$v.profile.catalogSet.$invalid
+        return this_.$v.profile.animals.$invalid || this_.$v.profile.catalogSet.$invalid
     },
     inputName: (this_, value) => {
         groupInputAction(this_, 'profile', 'personal', 'name', value)
@@ -152,7 +164,7 @@ export const registrationValidation = {
     },
     inputCatalog: (this_, value) => {
         this_.profile.catalogSet = value;
-        if (this_.$v.profile.catalogSet !== undefined) {
+        if (this_.$v.profile.catalogSet) {
             this_.$v.profile.catalogSet.$touch()
 
             this_.errors.petsitter.catalogSet = defaultValues['catalogSet']
@@ -233,7 +245,7 @@ export const profileValidation = {
         }
     },
     catalogSetChange(this_) {
-        if (this_.$v.profile.catalogSet !== undefined) {
+        if (this_.$v.profile.catalogSet) {
             this_.$v.profile.catalogSet.$touch()
 
             this_.errors.catalogSet = defaultValues['catalogSet']
@@ -258,6 +270,153 @@ export const profileValidation = {
         if (this_.activePetsitter) {
             validateField(this_, 'profile', 'catalogSet')
             validateField(this_, 'profile', 'animals')
+        }
+    }
+}
+
+export const validationConfigs = {
+    login: () => {
+        return {
+            user: {
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required
+                }
+            }
+        }
+    },
+    registration: () => {
+        return {
+            profile: {
+                email: {
+                    required,
+                    email
+                },
+                password: {
+                    required,
+                    strongPassword(password) {
+                        return (
+                            /[a-z]/.test(password) && // checks for a-z
+                            /[0-9]/.test(password) && // checks for 0-9
+                            /\W|_/.test(password) && // checks for special char
+                            password.length >= 6
+                        );
+                    }
+                },
+                repeatPassword: {
+                    required,
+                    sameAsPassword: sameAs("password")
+                },
+                name: {
+                    required
+                },
+                phone: {
+                    required
+                },
+                city: {
+                    required
+                },
+                animals: {
+                    required,
+                    notEmptyList
+                },
+                catalogSet: {
+                    required,
+                    notEmptyList,
+                    $each: {
+                        price: {
+                            required
+                        },
+                        units: {
+                            required
+                        },
+                        petService: {
+                            required,
+                            notEmpty
+                        }
+                    }
+                }
+            }
+        }
+    },
+    newOrder: () => {
+        return {
+            order: {
+                city: {
+                    required,
+                },
+                client: {
+                    required,
+                },
+                animals: {
+                    required,
+                    notEmptyList
+                },
+                petServices: {
+                    required,
+                    notEmptyList
+                },
+                startDate: {
+                    startDateValidator
+                },
+                endDate: {
+                    endDateValidator
+                },
+            }
+        }
+    },
+    profile: (activePetsitter) => {
+        if (!activePetsitter) {
+            return {
+                profile: {
+                    name: {
+                        required
+                    },
+                    phone: {
+                        required
+                    },
+                    city: {
+                        required
+                    }
+                }
+            }
+        } else {
+            return {
+                profile: {
+                    name: {
+                        required
+                    },
+                    phone: {
+                        required
+                    },
+                    city: {
+                        required,
+                    },
+                    animals: {
+                        required,
+                        notEmptyList
+                    },
+                    catalogSet: {
+                        required,
+                        notEmptyList,
+                        $each: {
+                            price: {
+                                required
+                            },
+                            units: {
+                                required
+                            },
+                            petService: {
+                                required,
+                                notEmpty
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

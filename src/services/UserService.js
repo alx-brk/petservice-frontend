@@ -5,6 +5,7 @@ const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('
 const baseUrl = 'http://localhost:8090/user'
 
 class UserService {
+
     get currentUserValue(){
         return currentUserSubject.value;
     }
@@ -26,7 +27,7 @@ class UserService {
     logout(){
         // eslint-disable-next-line no-console
         console.log("logout")
-        axios.create({
+        return axios.create({
             baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +68,8 @@ class UserService {
             baseURL: baseUrl,
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true
+                'Access-Control-Allow-Origin': true,
+                'Authorization': 'Basic ' + this.currentUserValue.token
             }
         }).post('/search', JSON.stringify(filterOptions))
     }

@@ -15,6 +15,7 @@
 <script>
     import OrderCard from "../common/OrderCard";
     import JobService from "../../services/JobService";
+    import UserService from "../../services/UserService";
 
     export default {
         name: "ClientOrders",
@@ -25,10 +26,13 @@
             orders: [],
             profile: null
         }),
-        methods: {},
+        created() {
+            this.profile = UserService.currentUserValue;
+            if (!this.profile){
+                this.$router.push('/login')
+            }
+        },
         mounted() {
-            this.profile = JSON.parse(localStorage.getItem('currentUser'))
-
             JobService.fetchClientOrders(this.profile.id)
                 .then((response) => {
                     this.orders = response.data

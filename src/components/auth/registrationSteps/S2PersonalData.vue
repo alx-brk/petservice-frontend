@@ -82,13 +82,13 @@
                 return this.$store.getters.cities
             },
             nameErrors() {
-                return (this.errors === undefined) ? [] : this.errors.name
+                return (this.errors.name) ? this.errors.name : []
             },
             phoneErrors() {
-                return (this.errors === undefined) ? [] : this.errors.phone
+                return (this.errors.phone) ? this.errors.phone : []
             },
             cityErrors() {
-                return (this.errors === undefined) ? [] : this.errors.city
+                return (this.errors.city) ? this.errors.city : []
             }
         },
         methods: {

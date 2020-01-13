@@ -26,9 +26,9 @@
 </template>
 
 <script>
-    import {email, required} from "vuelidate/lib/validators";
     import UserService from "../../services/UserService";
     import User from "../../model/User";
+    import {validationConfigs} from "../../common/validation"
 
     export default {
         name: "Login",
@@ -40,6 +40,13 @@
             },
             loading: false
         }),
+        created() {
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    this.login()
+                }
+            });
+        },
         mounted() {
             if (UserService.currentUserValue) {
                 this.$router.push('/profile')
@@ -70,17 +77,7 @@
             }
         },
         validations() {
-            return {
-                user: {
-                    email: {
-                        required,
-                        email
-                    },
-                    password: {
-                        required
-                    }
-                }
-            }
+            return validationConfigs.login()
         }
     }
 </script>

@@ -252,16 +252,11 @@
 </template>
 
 <script>
-    import {required} from 'vuelidate/lib/validators';
-    import {profileValidation} from "../../common/validation";
+    import {profileValidation, validationConfigs} from "../../common/validation";
     import ExpPanelHeader from "./ExpPanelHeader";
     import CatalogSetInput from "../common/CatalogSetInput";
-    import User from "../../model/User";
     import UserService from "../../services/UserService";
     import ImageService from "../../services/ImageService";
-
-    const notEmptyList = (array) => array.length > 0;
-    const notEmpty = (value) => value !== undefined && value.id !== null && value.name != null
 
     export default {
         name: "Profile",
@@ -270,7 +265,7 @@
             'catalog-set-input': CatalogSetInput
         },
         data: () => ({
-            profile: new User(),
+            profile: null,
             errors: {
                 name: [],
                 phone: [],
@@ -281,18 +276,24 @@
             file: [],
             validCities: []
         }),
+        created() {
+          this.profile = UserService.currentUserValue;
+          if (!this.profile){
+              this.$router.push('/login')
+          }
+        },
         computed: {
             notNullCatalog() {
-                if (typeof this.profile.catalogSet !== 'undefined' && this.profile.catalogSet.length > 0) {
+                if (!!this.profile.catalogSet && this.profile.catalogSet.length > 0) {
                     return this.profile.catalogSet.filter(
-                        item => (item.petService != null && item.price != null)
+                        item => (!!item.petService && !!item.price)
                     )
                 } else {
                     return [];
                 }
             },
             feedbackCount() {
-                if (typeof this.profile.feedback !== 'undefined') {
+                if (this.profile.feedback) {
                     return this.profile.feedback.length;
                 } else {
                     return 0;
@@ -314,7 +315,7 @@
                 return this.$store.getters.units
             },
             cityName() {
-                return (this.profile.city === undefined || this.profile.city == null) ? '' : this.profile.city.name
+                return (this.profile.city.name) ? this.profile.city.name : ''
             },
             showAlert() {
                 return this.errors.catalogSet > 0
@@ -358,9 +359,7 @@
                 } else {
                     this.profile.avatar = null;
                     this.profile.catalogSet = this.profile.catalogSet.filter(catalog => {
-                        return catalog.petService.name != null &&
-                            catalog.price != null &&
-                            catalog.units != null
+                        return !!catalog.petService.name && !!catalog.price && !!catalog.units
                     });
 
                     UserService.updateProfile(this.profile)
@@ -377,16 +376,16 @@
                 }
             },
             nullSafetyError(obj) {
-                return (obj === undefined || obj === null) ? false : obj.$invalid && obj.$anyDirty
+                return (obj) ? obj.$invalid && obj.$anyDirty : false
             },
             nullSafetyValid(obj) {
-                return (obj === undefined || obj === null) ? false : !obj.$invalid && obj.$anyDirty
+                return (obj) ? !obj.$invalid && obj.$anyDirty : false
             },
             nullSafetyValidCatalog(obj) {
-                return (obj === undefined || obj === null) ? false : obj.$anyDirty && this.errors.catalogSet.length === 0
+                return (obj) ? obj.$anyDirty && this.errors.catalogSet.length === 0 : false
             },
             uploadAvatar() {
-                if (this.file !== null) {
+                if (this.file) {
                     ImageService.upload(this.profile.id, this.file)
                         .then((response) => {
                             this.profile.avatar = response.data
@@ -402,59 +401,8 @@
                 }
             }
         },
-        mounted() {
-            this.profile = JSON.parse(localStorage.getItem('currentUser'))
-        },
         validations() {
-            if (!this.profile.activePetsitter) {
-                return {
-                    profile: {
-                        name: {
-                            required
-                        },
-                        phone: {
-                            required
-                        },
-                        city: {
-                            required
-                        }
-                    }
-                }
-            } else {
-                return {
-                    profile: {
-                        name: {
-                            required
-                        },
-                        phone: {
-                            required
-                        },
-                        city: {
-                            required,
-                        },
-                        animals: {
-                            required,
-                            notEmptyList
-                        },
-                        catalogSet: {
-                            required,
-                            notEmptyList,
-                            $each: {
-                                price: {
-                                    required
-                                },
-                                units: {
-                                    required
-                                },
-                                petService: {
-                                    required,
-                                    notEmpty
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            return validationConfigs.profile(this.profile.activePetsitter)
         }
     }
 </script>

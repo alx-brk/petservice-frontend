@@ -94,21 +94,12 @@
 </template>
 
 <script>
-    import {required} from 'vuelidate/lib/validators'
-    import {orderValidation} from "../../common/validation";
+    import {orderValidation, validationConfigs} from "../../common/validation";
     import DateField from "../common/DateField";
     import InputFieldProxy from "./InputFieldProxy";
     import JobService from "../../services/JobService";
     import Job from "../../model/Job";
-
-    const startDateValidator = (startDate) => {
-        return (startDate === null || startDate === '') ? true :
-        startDate >= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).toISOString()
-    };
-    const endDateValidator = (endDate, vm) => {
-        return (endDate === null || endDate === '') ? true : endDate > vm.startDate
-    };
-    const notEmpty = (array) => array.length > 0;
+    import UserService from "../../services/UserService";
 
 
     export default {
@@ -128,6 +119,12 @@
                 endDate:[]
             }
         }),
+        created() {
+            this.profile = UserService.currentUserValue;
+            if (!this.profile){
+                this.$router.push('/login')
+            }
+        },
         computed: {
             cities() {
                 return this.$store.getters.cities
@@ -140,7 +137,6 @@
             },
         },
         mounted() {
-            this.profile = JSON.parse(localStorage.getItem('currentUser'))
             this.order.city = this.profile.city;
             this.order.client = this.profile;
         },
@@ -193,34 +189,11 @@
                 }
             },
             nullSafetyError(obj) {
-                return (obj === undefined || obj === null) ? false : obj.$invalid && obj.$anyDirty
+                return (obj) ? obj.$invalid && obj.$anyDirty : false
             },
         },
         validations() {
-            return {
-                order: {
-                    city: {
-                        required,
-                    },
-                    client: {
-                        required,
-                    },
-                    animals: {
-                        required,
-                        notEmpty
-                    },
-                    petServices: {
-                        required,
-                        notEmpty
-                    },
-                    startDate: {
-                        startDateValidator
-                    },
-                    endDate: {
-                        endDateValidator
-                    },
-                }
-            }
+            return validationConfigs.newOrder();
         }
     }
 </script>

@@ -25,7 +25,7 @@
         },
         computed: {
             personProvided() {
-                return this.person != null
+                return !!this.person
             },
             avatarLink() {
                 return ImageService.avatarLink(this.person.avatar)

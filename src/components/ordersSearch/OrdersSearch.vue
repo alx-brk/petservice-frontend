@@ -34,8 +34,6 @@
             searchResults: [],
             filterOptions: new FilterOptions()
         }),
-        mounted() {
-        },
         methods: {
             search() {
                 JobService.search(this.filterOptions)

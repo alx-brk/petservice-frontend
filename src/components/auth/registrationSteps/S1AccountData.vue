@@ -53,13 +53,13 @@
         props: ['email', 'password', 'repeatPassword', 'errors'],
         computed: {
             emailErrors() {
-                return (this.errors === undefined) ? [] : this.errors.email
+                return (this.errors.email) ? this.errors.email : []
             },
             passwordErrors() {
-                return (this.errors === undefined) ? [] : this.errors.password
+                return (this.errors.password) ? this.errors.password : []
             },
             repeatPasswordErrors() {
-                return (this.errors === undefined) ? [] : this.errors.repeatPassword
+                return (this.errors.repeatPassword) ? this.errors.repeatPassword : []
             }
         },
         methods: {

@@ -39,7 +39,13 @@
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console
-                        console.log(error);
+                        console.log(JSON.stringify(error.response));
+                        if (error.response.status === 401){
+                          // eslint-disable-next-line no-console
+                          console.log('redirect to login')
+                          localStorage.removeItem('currentUser');
+                          this.$router.push('/login')
+                        }
                     })
             },
             updateFilterOptions(options){
