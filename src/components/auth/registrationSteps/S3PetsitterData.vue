@@ -5,7 +5,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Животные</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-autocomplete
                             :items="allAnimals"
                             :value="animals"
@@ -22,7 +22,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Услуги и цены</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <catalog-set-input
                         :catalog="catalogSet"
                         :errors="errors"
@@ -33,7 +33,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">О себе</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-textarea
                             :value="description"
                             @change="updateDescription"
@@ -44,7 +44,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Аватар</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-3">
+                <v-card-actions class="pt-0 pb-1 ma-3">
                     <v-file-input
                             accept="image/png, image/jpeg, image/bmp"
                             placeholder="Выбрать аватар"

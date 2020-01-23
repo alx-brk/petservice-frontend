@@ -5,7 +5,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Имя</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-text-field
                             :value="name"
                             :error-messages="nameErrors"
@@ -16,7 +16,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Телефон</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-text-field
                             :value="phone"
                             :error-messages="phoneErrors"
@@ -27,7 +27,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Город</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-autocomplete
                             :items="cities"
                             :value="city"

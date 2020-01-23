@@ -17,11 +17,11 @@
                             <template #activator="{ on }">
                 <span v-on="on">
                   <v-list-item-avatar>
-                    <img src="https://randomuser.me/api/portraits/women/81.jpg">
+                    <img :src="avatarLink">
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>Маша Пупкина</v-list-item-title>
-                    <v-list-item-subtitle>masha.pupkina@gmail.com</v-list-item-subtitle>
+                    <v-list-item-title v-text="name"/>
+                    <v-list-item-subtitle v-text="email"/>
                   </v-list-item-content>
                 </span>
                             </template>
@@ -75,13 +75,11 @@
                 <v-toolbar-items>
                     <v-btn
                             text
-                            v-for="link in links"
-                            :to="link.url"
-                            :key="link.title"
-                            @click="link.click"
+                            to="/login"
+                            @click="logout"
                     >
-                        <v-icon left v-text="link.icon"/>
-                        {{link.title}}
+                        <v-icon left>mdi-exit-to-app</v-icon>
+                        {{title}}
                     </v-btn>
                 </v-toolbar-items>
             </v-toolbar>
@@ -96,15 +94,13 @@
 <script>
 
     import UserService from "./services/UserService";
+    import ImageService from "./services/ImageService";
 
     export default {
         name: 'App',
         components: {},
         data: () => ({
             drawer: false,
-            links: [
-                {title: 'Выйти', icon: 'mdi-exit-to-app', url: '/login', click: UserService.logout}
-            ],
             activeItem: null,
             clientMenu: [
                 {title: 'Мои заказы', icon: 'mdi-paw', url: '/client-orders'},
@@ -115,10 +111,10 @@
                 {title: 'Мои заказы', icon: 'mdi-briefcase', url: '/petsitter-orders'},
                 {title: 'Поиск заказа', icon: 'mdi-briefcase-search', url: '/orders-search'}
             ],
-            currentUser: null
+            // currentUser: null
         }),
         created() {
-            this.currentUser = UserService.currentUserValue;
+            // this.currentUser = UserService.currentUserValue;
             this.$store.dispatch('initAnimals');
             this.$store.dispatch('initServices');
             this.$store.dispatch('initCities');
@@ -127,7 +123,28 @@
         },
         computed: {
             authorized() {
-                return !!(this.currentUser)
+                return !!this.currentUser
+            },
+            title() {
+                return (this.currentUser) ? 'Выйти' : 'Войти'
+            },
+            currentUser(){
+                return UserService.currentUserValue;
+            },
+            avatarLink(){
+                return ImageService.avatarLink(this.currentUser.avatar)
+            },
+            email(){
+                return (this.currentUser) ? this.currentUser.email : ''
+            },
+            name(){
+                return (this.currentUser) ? this.currentUser.name : ''
+            }
+        },
+        methods: {
+            logout(){
+                UserService.logout()
+                this.$router.push('/')
             }
         }
     };

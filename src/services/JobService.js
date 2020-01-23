@@ -4,6 +4,17 @@ import UserService from "./UserService";
 const baseUrl = 'http://localhost:8090/job'
 
 class JobService {
+
+    constructor() {
+        UserService.currentUser.subscribe(data => {
+            this.headers = {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true,
+                'Authorization': 'Bearer ' + (data ? data.token:'')
+            }
+        })
+    }
+
     fetchClientOrders(id){
         const config = {
             params: {
@@ -13,11 +24,7 @@ class JobService {
 
         return axios.create({
             baseURL: baseUrl,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true,
-                'Authorization': 'Basic ' + UserService.currentUserValue.token
-            }
+            headers: this.headers
         }).get('/client-orders', config);
     }
 
@@ -30,20 +37,14 @@ class JobService {
 
         return axios.create({
             baseURL: baseUrl,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true
-            }
+            headers: this.headers
         }).get('/petsitter-orders', config);
     }
 
     createOrder(job){
         return axios.create({
             baseURL: baseUrl,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true
-            }
+            headers: this.headers
         }).post('/', JSON.stringify(job))
     }
 

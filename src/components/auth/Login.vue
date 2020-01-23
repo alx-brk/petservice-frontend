@@ -1,28 +1,37 @@
 <template>
-    <v-card :loading="loading">
-        <v-card-title>Вход</v-card-title>
-        <v-card-actions class="flex-column">
-            <v-text-field
-                    v-model="user.email"
-                    class="d-flex"
-                    :error-messages="errors.email"
-                    label="Email"
-            />
-            <v-text-field
-                    v-model="user.password"
-                    class="d-flex"
-                    type="password"
-                    :error-messages="errors.password"
-                    label="Пароль"
-            />
-            <v-btn
-                    color="primary"
-                    @click="login"
-                    :disabled="loading"
-            >Войти
-            </v-btn>
-        </v-card-actions>
-    </v-card>
+    <v-container class="pa-12">
+        <v-card :loading="loading">
+            <v-card-title>Вход</v-card-title>
+            <v-card-actions>
+                <v-col>
+                    <v-text-field
+                            v-model="user.email"
+                            :error-messages="errors.email"
+                            label="Email"
+                    />
+                    <v-text-field
+                            v-model="user.password"
+                            type="password"
+                            :error-messages="errors.password"
+                            label="Пароль"
+                    />
+                    <v-btn
+                            color="primary"
+                            @click="login"
+                            :disabled="loading"
+                    >Войти
+                    </v-btn>
+                </v-col>
+            </v-card-actions>
+            <v-card-text>
+                <router-link
+                        to="/registration"
+                >
+                    Зарегистрироваться
+                </router-link>
+            </v-card-text>
+        </v-card>
+    </v-container>
 </template>
 
 <script>
@@ -66,6 +75,7 @@
                             console.log(response.data)
                             localStorage.setItem('currentUser', JSON.stringify(response.data));
                             UserService.nextUserSubject(response.data);
+                            location.reload()
                             this.$router.push('/profile')
                         })
                         .catch((error) => {

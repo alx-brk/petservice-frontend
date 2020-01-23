@@ -61,6 +61,7 @@
                         <date-field
                                 label="Дата начала"
                                 :value="order.startDate"
+                                :errors="errors.startDate"
                                 icon="mdi-calendar-today"
                                 @input="startDateInput"
                         />
@@ -71,6 +72,7 @@
                         <date-field
                                 label="Дата окончания"
                                 :value="order.endDate"
+                                :errors="errors.endDate"
                                 icon="mdi-calendar"
                                 @input="endDateInput"
                         />
@@ -174,6 +176,8 @@
             createOrder() {
                 if (this.$v.$invalid){
                     orderValidation.validateForm(this)
+                    // eslint-disable-next-line no-console
+                    console.log("invalid")
                 } else {
                     JobService.createOrder(this.order)
                         .then((response) => {

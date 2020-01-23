@@ -32,7 +32,7 @@ const defaultValues = {
     repeatPassword: '',
 }
 
-const notEmptyList = (array) => array.length > 0;
+const notEmptyList = (array) => !!array && array.length > 0;
 const notEmpty = (value) => !!value && !!value.id && !!value.name
 const startDateValidator = (startDate) => {
     return (startDate) ? true :

@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-simple-table fixed-header>
-            <thead v-show="catalogSet.length > 0">
+            <thead v-show="showCatalog">
             <tr>
                 <th class="text-left">Услуга</th>
                 <th colspan="2" class="text-left">Цена</th>
@@ -80,7 +80,10 @@
                 return this.$store.getters.units
             },
             showErrors(){
-                return this.errors.catalogSet.length > 0
+                return (this.errors.catalogSet) ? this.errors.catalogSet.length > 0 : false
+            },
+            showCatalog(){
+                return (this.catalogSet) ? this.catalogSet.length > 0 : false
             }
         },
         mounted() {

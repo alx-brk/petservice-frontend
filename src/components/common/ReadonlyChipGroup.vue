@@ -53,7 +53,7 @@
                     item.name
             },
             arrayContainsItem(array, item){
-                return array.some(e => e.id === item.id && e.name === item.name)
+                return (array) ? array.some(e => e.id === item.id && e.name === item.name) : false
             }
         }
     }

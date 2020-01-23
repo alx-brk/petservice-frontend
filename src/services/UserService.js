@@ -6,6 +6,16 @@ const baseUrl = 'http://localhost:8090/user'
 
 class UserService {
 
+    constructor() {
+        this.currentUser.subscribe(data => {
+            this.headers = {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': true,
+                'Authorization': 'Bearer ' + (data ? data.token:'')
+            }
+        })
+    }
+
     get currentUserValue(){
         return currentUserSubject.value;
     }
@@ -34,11 +44,9 @@ class UserService {
                 'Access-Control-Allow-Origin': true
             }
         }).post('/logout', {})
-            .then((response) => {
+            .then(() => {
                 // eslint-disable-next-line no-console
                 console.log('response on logout');
-                // eslint-disable-next-line no-console
-                console.log(response.data);
 
                 localStorage.removeItem('currentUser');
                 currentUserSubject.next(null);
@@ -66,21 +74,14 @@ class UserService {
     search(filterOptions){
         return axios.create({
             baseURL: baseUrl,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true,
-                'Authorization': 'Basic ' + this.currentUserValue.token
-            }
+            headers: this.headers
         }).post('/search', JSON.stringify(filterOptions))
     }
 
     updateProfile(user){
         return axios.create({
             baseURL: baseUrl,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': true
-            }
+            headers: this.headers
         }).put('', JSON.stringify(user));
     }
 }

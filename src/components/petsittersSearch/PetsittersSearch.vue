@@ -39,12 +39,13 @@
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console
-                        console.log(JSON.stringify(error.response));
+                        console.log(JSON.stringify(error));
                         if (error.response.status === 401){
                           // eslint-disable-next-line no-console
                           console.log('redirect to login')
                           localStorage.removeItem('currentUser');
                           this.$router.push('/login')
+                          location.reload()   //TODO: check that reloads.
                         }
                     })
             },

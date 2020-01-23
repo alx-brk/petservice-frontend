@@ -4,7 +4,7 @@
         <v-card-text class="ma-0">
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Email почта</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-text-field
                             :value="email"
                             :error-messages="emailErrors"
@@ -15,7 +15,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Пароль</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-text-field
                             :value="password"
                             type="password"
@@ -27,7 +27,7 @@
 
             <v-card class="ma-0 pa-0 mb-3 elevation-5">
                 <v-card-title class="text--secondary mb-0 pb-0">Повторите пароль</v-card-title>
-                <v-card-actions class="pt-0 pb-0 ma-0">
+                <v-card-actions class="pt-0 pb-1 ma-0">
                     <v-text-field
                             :value="repeatPassword"
                             type="password"
