@@ -6,11 +6,12 @@ const baseUrl = 'http://localhost:8090/job'
 class JobService {
 
     constructor() {
-        UserService.currentUser.subscribe(data => {
+        UserService.jwtToken.subscribe(token => {
             this.headers = {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true,
-                'Authorization': 'Bearer ' + (data ? data.token:'')
+                'Authorization': 'Bearer ' + token,
+                'X-XSRF-TOKEN': UserService.getCsrfToken
             }
         })
     }
@@ -19,7 +20,8 @@ class JobService {
         const config = {
             params: {
                 id: id
-            }
+            },
+            withCredentials: true
         };
 
         return axios.create({
@@ -32,7 +34,8 @@ class JobService {
         const config = {
             params: {
                 id: id
-            }
+            },
+            withCredentials: true
         };
 
         return axios.create({
@@ -45,7 +48,7 @@ class JobService {
         return axios.create({
             baseURL: baseUrl,
             headers: this.headers
-        }).post('/', JSON.stringify(job))
+        }).post('/', JSON.stringify(job), {withCredentials: true})
     }
 
     search(filterOptions){
@@ -55,7 +58,7 @@ class JobService {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true
             }
-        }).post('/search', JSON.stringify(filterOptions))
+        }).post('/search', JSON.stringify(filterOptions), {withCredentials: true})
     }
 
     fetchJobStatuses(){
@@ -65,7 +68,7 @@ class JobService {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true
             }
-        }).get('/statuses/all')
+        }).get('/statuses/all', {withCredentials: true})
     }
 
     fetchUnits(){
@@ -75,7 +78,7 @@ class JobService {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true
             }
-        }).get('/units/all')
+        }).get('/units/all', {withCredentials: true})
     }
 }
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import UserService from "./UserService";
 
 const baseUrl = 'http://localhost:8090/image'
 
@@ -12,9 +13,10 @@ class ImageService {
             headers: {
                 'Accept': 'application/json',
                 'Access-Control-Allow-Origin': true,
+                'X-XSRF-TOKEN': UserService.getCsrfToken,
                 'Content-Type': 'multipart/form-data; boundary=--ololo'
             }
-        }).post('/' + id, formData)
+        }).post('/' + id, formData, {withCredentials: true})
     }
 
     avatarLink(avatar){

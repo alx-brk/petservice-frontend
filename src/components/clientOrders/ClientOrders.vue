@@ -27,15 +27,21 @@
             profile: null
         }),
         created() {
-            this.profile = UserService.currentUserValue;
+            this.profile = UserService.getProfileState;
             if (!this.profile){
-                this.$router.push('/login')
+                // eslint-disable-next-line no-console
+                console.log('/login');
+                // this.$router.push('/login')
             }
         },
         mounted() {
             JobService.fetchClientOrders(this.profile.id)
                 .then((response) => {
                     this.orders = response.data
+                    const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                    if (csrfToken){
+                        UserService.csrfToken = csrfToken
+                    }
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console

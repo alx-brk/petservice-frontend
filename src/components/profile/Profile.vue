@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container v-if="profile != null" >
         <v-layout align="center" justify="start" class="ma-3 flex-wrap flex-row">
             <v-flex>
                 <v-avatar>
@@ -35,7 +35,7 @@
               />
             </span>
                     </template>
-                    <span v-text="'Рейтинг петситтера ' + profile.rating"/>
+                    <span v-text="'Рейтинг петситтера ' + profile ? profile.rating : ''"/>
                 </v-tooltip>
             </v-flex>
         </v-layout>
@@ -276,11 +276,8 @@
             file: [],
             validCities: []
         }),
-        created() {
-          this.profile = UserService.currentUserValue;
-          if (!this.profile){
-              this.$router.push('/login')
-          }
+        mounted() {
+            this.profile = UserService.getProfileState;
         },
         computed: {
             notNullCatalog() {
@@ -300,7 +297,7 @@
                 }
             },
             avatarLink() {
-                return ImageService.avatarLink(this.profile.avatar)
+                return ImageService.avatarLink(this.profile ? this.profile.avatar : null)
             },
             cities() {
                 return this.$store.getters.cities
@@ -362,17 +359,21 @@
                         return !!catalog.petService.name && !!catalog.price && !!catalog.units
                     });
 
+                    UserService.setProfileState = this.profile;
+
                     UserService.updateProfile(this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
                             console.log('response on profile update')
-                            // eslint-disable-next-line no-console
-                            console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console
                             console.log(error)
-                        })
+                        });
                 }
             },
             nullSafetyError(obj) {
@@ -393,6 +394,10 @@
                             console.log('response on image upload')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console

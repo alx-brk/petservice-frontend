@@ -128,6 +128,10 @@
                             console.log('response on registration')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                             this.profile.id = response.data.id
                             this.uploadAvatar()
                             this.$router.push('/profile')
@@ -149,6 +153,10 @@
                             console.log('response on image upload')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console

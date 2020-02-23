@@ -79,7 +79,7 @@
                 return (this.selectedItemsContainer.petServices) ? this.selectedItemsContainer.petServices : []
             },
             avatarLink() {
-                return ImageService.avatarLink(this.profile.avatar)
+                return ImageService.avatarLink(this.profile ? this.profile.avatar : null )
             }
         }
     }

@@ -1,20 +1,20 @@
 <template>
-  <v-container>
-    <filter-drawer
-            type="orderSearch"
-            @input="updateFilterOptions"
-            @search="search"
-    />
-    <div class="flex-wrap ma-3 flex-column align-start"
-         v-for="order in searchResults"
-         :key="order.id"
-    >
-      <order-card
-              :order="order"
-              :selected-items-container="filterOptions"
-      />
-    </div>
-  </v-container>
+    <v-container>
+        <filter-drawer
+                type="orderSearch"
+                @input="updateFilterOptions"
+                @search="search"
+        />
+        <div class="flex-wrap ma-3 flex-column align-start"
+             v-for="order in searchResults"
+             :key="order.id"
+        >
+            <order-card
+                    :order="order"
+                    :selected-items-container="filterOptions"
+            />
+        </div>
+    </v-container>
 </template>
 
 <script>
@@ -22,6 +22,7 @@
     import FilterDrawer from "../common/FilterDrawer";
     import FilterOptions from "../../model/FilterOptions";
     import JobService from "../../services/JobService";
+    import UserService from "../../services/UserService";
 
     export default {
         name: "OrdersSearch",
@@ -39,13 +40,17 @@
                 JobService.search(this.filterOptions)
                     .then((response) => {
                         this.searchResults = response.data
+                        const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                        if (csrfToken) {
+                            UserService.setCsrfToken = csrfToken;
+                        }
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.log(error);
                     })
             },
-            updateFilterOptions(options){
+            updateFilterOptions(options) {
                 this.filterOptions = options
             }
         }

@@ -14,6 +14,6 @@ export default new Vuex.Store({
         animals,
         services,
         units,
-        jobStatuses
+        jobStatuses,
     }
 })

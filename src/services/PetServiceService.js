@@ -10,7 +10,7 @@ class PetServiceService {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': true
             }
-        }).get('/all')
+        }).get('/all', {withCredentials: true})
     }
 }
 

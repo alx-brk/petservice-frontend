@@ -57,8 +57,8 @@
             });
         },
         mounted() {
-            if (UserService.currentUserValue) {
-                this.$router.push('/profile')
+            if (UserService.jwtTokenValue) {
+                this.$router.push('/')
             }
         },
         methods: {
@@ -67,22 +67,18 @@
                     this.$v.user.touch()
                 } else {
                     this.loading = true
+
                     UserService.login(this.user)
-                        .then((response) => {
-                            // eslint-disable-next-line no-console
-                            console.log('response on login')
-                            // eslint-disable-next-line no-console
-                            console.log(response.data)
-                            localStorage.setItem('currentUser', JSON.stringify(response.data));
-                            UserService.nextUserSubject(response.data);
-                            location.reload()
-                            this.$router.push('/profile')
-                        })
-                        .catch((error) => {
-                            // eslint-disable-next-line no-console
-                            console.log(error)
-                            this.loading = false
-                        })
+                        .then(
+                            () => {
+                                this.$router.push('/');
+                            },
+                            error => {
+                                // eslint-disable-next-line no-console
+                                console.log(error);
+                                this.loading = false;
+                            }
+                        );
                 }
             }
         },

@@ -2,6 +2,7 @@
     <v-app>
         <v-card>
             <v-navigation-drawer
+                    v-if="currentUser != null"
                     v-model="drawer"
                     overflow
                     app
@@ -20,8 +21,8 @@
                     <img :src="avatarLink">
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title v-text="name"/>
-                    <v-list-item-subtitle v-text="email"/>
+                    <v-list-item-title v-text="currentUser.name"/>
+                    <v-list-item-subtitle v-text="currentUser.email"/>
                   </v-list-item-content>
                 </span>
                             </template>
@@ -73,14 +74,9 @@
                 <v-toolbar-title>Petservice</v-toolbar-title>
                 <v-spacer/>
                 <v-toolbar-items>
-                    <v-btn
-                            text
-                            to="/login"
-                            @click="logout"
-                    >
-                        <v-icon left>mdi-exit-to-app</v-icon>
-                        {{title}}
-                    </v-btn>
+                    <auth-button
+                        :authorized="authorized"
+                    />
                 </v-toolbar-items>
             </v-toolbar>
         </v-app-bar>
@@ -95,10 +91,13 @@
 
     import UserService from "./services/UserService";
     import ImageService from "./services/ImageService";
+    import AuthButton from "./components/auth/AuthButton";
 
     export default {
         name: 'App',
-        components: {},
+        components: {
+            'auth-button': AuthButton
+        },
         data: () => ({
             drawer: false,
             activeItem: null,
@@ -110,11 +109,10 @@
             petsitterMenu: [
                 {title: 'Мои заказы', icon: 'mdi-briefcase', url: '/petsitter-orders'},
                 {title: 'Поиск заказа', icon: 'mdi-briefcase-search', url: '/orders-search'}
-            ],
-            // currentUser: null
+            ]
         }),
         created() {
-            // this.currentUser = UserService.currentUserValue;
+            UserService.fetchProfileInit();
             this.$store.dispatch('initAnimals');
             this.$store.dispatch('initServices');
             this.$store.dispatch('initCities');
@@ -123,29 +121,17 @@
         },
         computed: {
             authorized() {
-                return !!this.currentUser
+                return !!UserService.jwtTokenValue;
             },
             title() {
-                return (this.currentUser) ? 'Выйти' : 'Войти'
+                return (this.currentUser.email) ? 'Выйти' : 'Войти'
             },
-            currentUser(){
-                return UserService.currentUserValue;
+            currentUser() {
+                return UserService.getProfileState;
             },
-            avatarLink(){
+            avatarLink() {
                 return ImageService.avatarLink(this.currentUser.avatar)
             },
-            email(){
-                return (this.currentUser) ? this.currentUser.email : ''
-            },
-            name(){
-                return (this.currentUser) ? this.currentUser.name : ''
-            }
-        },
-        methods: {
-            logout(){
-                UserService.logout()
-                this.$router.push('/')
-            }
         }
     };
 </script>

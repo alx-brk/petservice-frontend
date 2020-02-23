@@ -1,17 +1,17 @@
 <template>
-  <v-container>
-    <filter-drawer
-            type="petsitterSearch"
-            @input="updateFilterOptions"
-            @search="search"
-    />
-    <petsitter-card
-            v-for="profile in searchResults"
-            :key="profile.id"
-            :profile="profile"
-            :selected-items-container="filterOptions"
-    />
-  </v-container>
+    <v-container>
+        <filter-drawer
+                type="petsitterSearch"
+                @input="updateFilterOptions"
+                @search="search"
+        />
+        <petsitter-card
+                v-for="profile in searchResults"
+                :key="profile.id"
+                :profile="profile"
+                :selected-items-container="filterOptions"
+        />
+    </v-container>
 </template>
 
 <script>
@@ -27,8 +27,7 @@
             'petsitter-card': PetsitterCard
         },
         data: () => ({
-            searchResults: [
-            ],
+            searchResults: [],
             filterOptions: new FilterOptions()
         }),
         methods: {
@@ -36,20 +35,17 @@
                 UserService.search(this.filterOptions)
                     .then((response) => {
                         this.searchResults = response.data
+                        const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                        if (csrfToken) {
+                            UserService.setCsrfToken = csrfToken;
+                        }
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console
                         console.log(JSON.stringify(error));
-                        if (error.response.status === 401){
-                          // eslint-disable-next-line no-console
-                          console.log('redirect to login')
-                          localStorage.removeItem('currentUser');
-                          this.$router.push('/login')
-                          location.reload()   //TODO: check that reloads.
-                        }
                     })
             },
-            updateFilterOptions(options){
+            updateFilterOptions(options) {
                 this.filterOptions = options
             }
         }

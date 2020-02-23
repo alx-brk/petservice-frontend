@@ -122,9 +122,11 @@
             }
         }),
         created() {
-            this.profile = UserService.currentUserValue;
+            this.profile = UserService.getProfileState
             if (!this.profile){
-                this.$router.push('/login')
+                // eslint-disable-next-line no-console
+                console.log('/login');
+                // this.$router.push('/login')
             }
         },
         computed: {
@@ -185,6 +187,10 @@
                             console.log('response of order creation')
                             // eslint-disable-next-line no-console
                             console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console

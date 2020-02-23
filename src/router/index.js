@@ -9,12 +9,13 @@ import PetsittersSearch from "../components/petsittersSearch/PetsittersSearch";
 import Registration from "../components/auth/Registration";
 import Login from "../components/auth/Login";
 import ErrorPage from "../components/auth/ErrorPage";
-import Role from "../model/Role";
-import UserService from "../services/UserService";
+import UserRole from "../model/UserRole";
 import jwtDecode from 'jwt-decode'
 import Home from "../components/home/Home";
+import UserService from "../services/UserService";
 
 Vue.use(VueRouter)
+Vue.use(require('vue-cookies'))
 
 const router = new VueRouter({
     routes: [
@@ -27,7 +28,7 @@ const router = new VueRouter({
             path: '/client-orders',
             name: 'client-orders',
             component: ClientOrders,
-            meta: { roles: [Role.USER, Role.ADMIN] }
+            meta: { roles: [UserRole.USER, UserRole.ADMIN] }
         },
         {
             path: '/new-order',
@@ -43,7 +44,7 @@ const router = new VueRouter({
             path: '/petsitter-orders',
             name: 'petsitter-orders',
             component: PetsitterOrders,
-            meta: { roles: [Role.USER, Role.ADMIN] }
+            meta: { roles: [UserRole.USER, UserRole.ADMIN] }
         },
         {
             path: '/orders-search',
@@ -54,7 +55,7 @@ const router = new VueRouter({
             path: '/profile',
             name: 'profile',
             component: Profile,
-            meta: { roles: [Role.USER, Role.ADMIN] }
+            meta: { roles: [UserRole.USER, UserRole.ADMIN] }
         },
         {
             path: '/registration',
@@ -67,7 +68,7 @@ const router = new VueRouter({
             component: Login
         },
         {
-            path: '/error/:id',
+            path: '/error/:errorCode',
             name: 'error',
             component: ErrorPage
         },
@@ -83,30 +84,30 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const { roles } = to.meta;
-    const currentUser = UserService.currentUserValue;
+    const jwtToken = UserService.jwtTokenValue;
 
     // eslint-disable-next-line no-console
-    console.log('current user roles')
+    console.log('required user roles')
     // eslint-disable-next-line no-console
     console.log(roles)
     if (roles) {
-        if (!currentUser) {
-            return next({path: '/login'})
+        if (!jwtToken) {
+            return next('/login')
         }
 
         // eslint-disable-next-line no-console
         console.log('jwt decoded')
 
-        let jwtObject = jwtDecode(currentUser.token);
+        let jwtObject = jwtDecode(jwtToken);
 
         // eslint-disable-next-line no-console
         console.log(jwtObject)
 
-        if (roles.length && !roles.includes(jwtObject.roles)){
+        if (roles.length && !jwtObject.authorities.some(item => roles.includes(item.authority))){
             // eslint-disable-next-line no-console
             console.log("to 401")
-            localStorage.removeItem('currentUser');
-            return next({path: '/login'})
+            localStorage.removeItem('jwtToken');
+            return next('/login')
         }
     }
     next();

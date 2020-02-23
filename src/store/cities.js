@@ -1,4 +1,5 @@
 import CityService from "../services/CityService";
+import UserService from "../services/UserService";
 
 export default {
     state: {
@@ -15,6 +16,10 @@ export default {
                 await CityService.fetchAll()
                     .then((response) => {
                         commit('SET_CITIES', response.data)
+                        const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                        if (csrfToken){
+                            UserService.csrfToken = csrfToken
+                        }
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console

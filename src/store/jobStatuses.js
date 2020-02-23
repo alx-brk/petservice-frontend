@@ -1,4 +1,5 @@
 import JobService from "../services/JobService";
+import UserService from "../services/UserService";
 
 export default {
     state: {
@@ -15,6 +16,10 @@ export default {
                 await JobService.fetchJobStatuses()
                     .then((response) => {
                         commit('SET_STATUSES', response.data)
+                        const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                        if (csrfToken){
+                            UserService.csrfToken = csrfToken
+                        }
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console
