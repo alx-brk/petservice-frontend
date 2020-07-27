@@ -1,20 +1,21 @@
 <template>
-  <v-container>
-    <div class="flex-wrap ma-3 flex-column align-start"
-         v-for="order in orders"
-         :key="order.id"
-    >
-      <order-card
-          :order="order"
-          :selected-items-container="order.petsitter"
-      ></order-card>
-    </div>
-  </v-container>
+    <v-container>
+        <div class="flex-wrap ma-3 flex-column align-start"
+             v-for="order in orders"
+             :key="order.id"
+        >
+          <order-card
+                  :order="order"
+                  :selected-items-container="order.petsitter"
+          />
+        </div>
+    </v-container>
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
     import OrderCard from "../common/OrderCard";
+    import JobService from "../../services/JobService";
+    import UserService from "../../services/UserService";
 
     export default {
         name: "ClientOrders",
@@ -22,20 +23,25 @@
             'order-card': OrderCard
         },
         data: () => ({
-            orders: [
-            ],
+            orders: [],
             profile: null
         }),
-        methods: {},
+        created() {
+            this.profile = UserService.getProfileState;
+            if (!this.profile){
+                // eslint-disable-next-line no-console
+                console.log('/login');
+                // this.$router.push('/login')
+            }
+        },
         mounted() {
-            this.profile = this.$store.getters.profile
-            api.jobController.get("/client-orders", {
-                params: {
-                    id: this.profile.id
-                }
-            })
+            JobService.fetchClientOrders(this.profile.id)
                 .then((response) => {
                     this.orders = response.data
+                    const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                    if (csrfToken){
+                        UserService.csrfToken = csrfToken
+                    }
                 })
                 .catch((error) => {
                     // eslint-disable-next-line no-console

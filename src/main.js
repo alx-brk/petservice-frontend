@@ -4,8 +4,10 @@ import vuetify from './plugins/vuetify';
 import Vuelidate from "vuelidate/src";
 import router from './router'
 import store from './store'
+import VueCookies from 'vue-cookies'
 
 Vue.use(Vuelidate)
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 

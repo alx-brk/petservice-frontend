@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container v-if="profile != null" >
         <v-layout align="center" justify="start" class="ma-3 flex-wrap flex-row">
             <v-flex>
                 <v-avatar>
@@ -32,10 +32,10 @@
                       full-icon="mdi-star"
                       half-increments
                       readonly
-              ></v-rating>
+              />
             </span>
                     </template>
-                    <span v-text="'Рейтинг петситтера ' + profile.rating"></span>
+                    <span v-text="'Рейтинг петситтера ' + profile ? profile.rating : ''"/>
                 </v-tooltip>
             </v-flex>
         </v-layout>
@@ -45,52 +45,74 @@
         <v-row align="center">
             <v-expansion-panels popout focusable>
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
+                        <template v-slot:actions v-if="errors.name.length > 0 || nullSafetyValid($v.profile.name)">
+                            <v-icon v-if="errors.name.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.name)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
-                            field-name="Имя"
-                            v-model="profile.name"
-                            @clear="profile.name = ''"
-                            type="text"
-                        />
-                    </v-expansion-panel-header>
-                    <v-expansion-panel-content>
-                        <v-text-field v-model.lazy="$v.profile.name.$model"></v-text-field>
-                        <validation-alert v-if="!$v.profile.name.required">Требуется указать имя</validation-alert>
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
-
-                <v-expansion-panel>
-                    <v-expansion-panel-header>
-                        <exp-panel-header
-                                field-name="Телефон"
-                                v-model="profile.phone"
-                                @clear="profile.phone = ''"
+                                field-name="Имя"
+                                v-model="profile.name"
+                                @clear="clearName"
                                 type="text"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                        <v-text-field v-model.lazy="$v.profile.phone.$model"></v-text-field>
-                        <validation-alert v-if="!$v.profile.phone.required">Требуется указать телефон</validation-alert>
+                        <v-text-field
+                                :value="profile.name"
+                                :error-messages="errors.name"
+                                @change="nameInput"
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
+                        <template v-slot:actions v-if="errors.phone.length > 0 || nullSafetyValid($v.profile.phone)">
+                            <v-icon v-if="errors.phone.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.phone)" color="teal">mdi-check</v-icon>
+                        </template>
+                        <exp-panel-header
+                                field-name="Телефон"
+                                v-model="profile.phone"
+                                @clear="clearPhone"
+                                type="text"
+                        />
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-text-field
+                                :value="profile.phone"
+                                :error-messages="errors.phone"
+                                @change="phoneInput"
+                        />
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+
+                <v-expansion-panel>
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
+                        <template v-slot:actions v-if="errors.city.length > 0 || nullSafetyValid($v.profile.city)">
+                            <v-icon v-if="errors.city.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.city)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Город"
                                 v-model="cityName"
-                                @clear="profile.city = null"
+                                @clear="clearCity"
                                 type="text"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-autocomplete
                                 :items="cities"
-                                v-model.lazy="$v.profile.city.$model"
+                                :value="profile.city"
+                                :error-messages="errors.city"
+                                @change="cityInput"
                                 item-text="name"
                                 return-object
-                        ></v-autocomplete>
-                        <validation-alert v-if="nullSafetyError($v.profile.city)">Требуется указать город</validation-alert>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-expansion-panels>
@@ -101,81 +123,61 @@
                     <v-switch
                             v-model="profile.activePetsitter"
                             label="Отображать вас в списке петситтеров"
-                    ></v-switch>
+                    />
                 </v-col>
             </v-row>
 
             <v-expansion-panels popout focusable :disabled="!profile.activePetsitter">
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                        <template v-slot:actions
+                                  v-if="errors.animals.length > 0 || nullSafetyValid($v.profile.animals)">
+                            <v-icon v-if="errors.animals.length > 0" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValid($v.profile.animals)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Животные"
                                 v-model="profile.animals"
-                                @clear="profile.animals = []"
+                                @clear="clearAnimals"
                                 type="animalChips"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-autocomplete
                                 :items="animals"
-                                v-model.lazy="profile.animals"
-                                @input="$v.profile.animals.$touch()"
+                                :value="profile.animals"
+                                :error-messages="errors.animals"
+                                @change="animalsInput"
                                 item-text="name"
                                 return-object
                                 dense
                                 chips
                                 multiple
-                        ></v-autocomplete>
-                        <validation-alert v-if="nullSafetyError($v.profile.animals)">Требуется указать хотя бы одно животное</validation-alert>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                    <v-expansion-panel-header>
+                    <v-expansion-panel-header
+                            :disable-icon-rotate="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
+                        <template v-slot:actions v-if="showAlert || nullSafetyValidCatalog($v.profile.catalogSet)">
+                            <v-icon v-if="showAlert" color="error">mdi-alert-circle</v-icon>
+                            <v-icon v-if="nullSafetyValidCatalog($v.profile.catalogSet)" color="teal">mdi-check</v-icon>
+                        </template>
                         <exp-panel-header
                                 field-name="Услуги и цены"
                                 v-model="notNullCatalog"
-                                @clear="profile.catalogSet = []"
+                                @clear="clearCatalogSet"
                                 type="catalogChips"
                         />
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                        <v-simple-table fixed-header>
-                            <thead>
-                            <tr>
-                                <th class="text-left">Услуга</th>
-                                <th colspan="2" class="text-left">Цена</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="option in profile.catalogSet" :key="option.petService.id">
-                                <td>
-                                    <v-select
-                                            :items="services"
-                                            @input="$v.profile.catalogSet.$touch()"
-                                            item-text="name"
-                                            v-model="option.petService"
-                                            return-object
-                                    ></v-select>
-                                </td>
-                                <td>
-                                    <v-text-field v-model="option.price"></v-text-field>
-                                </td>
-                                <td>
-                                    <v-select :items="units" v-model="option.units"></v-select>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </v-simple-table>
-                        <v-btn
-                                class="ma-3"
-                                @click="addService"
-                                color="primary"
-                        >
-                            <v-icon left>mdi-plus-circle</v-icon>
-                            Добавить
-                        </v-btn>
-                        <validation-alert v-if="nullSafetyError($v.profile.catalogSet)">Требуется указать хотя бы один сервис</validation-alert>
+                        <catalog-set-input
+                            :catalog="profile.catalogSet"
+                            :errors="errors"
+                            @catalogSetChange="catalogSetChange"
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
@@ -192,7 +194,7 @@
                         <v-textarea
                                 v-model="profile.description"
                                 auto-grow
-                        ></v-textarea>
+                        />
                     </v-expansion-panel-content>
                 </v-expansion-panel>
 
@@ -201,7 +203,7 @@
                         <v-row no-gutters>
                             <v-col cols="4">Отзывы</v-col>
                             <v-col cols="8" class="text--secondary"
-                                   v-text="'Количество отзывов: ' + feedbackCount "></v-col>
+                                   v-text="'Количество отзывов: ' + feedbackCount "/>
                         </v-row>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -227,7 +229,7 @@
                                                 full-icon="mdi-star"
                                                 half-increments
                                                 readonly
-                                        ></v-rating>
+                                        />
                                     </v-row>
                                 </v-list-item>
                             </v-card-actions>
@@ -241,7 +243,6 @@
                     class="ma-4"
                     @click="saveChanges"
                     color="primary"
-                    :disabled="buttonDisabled"
             >
                 <v-icon left>mdi-content-save-move</v-icon>
                 Сохранить изменения
@@ -251,58 +252,52 @@
 </template>
 
 <script>
-    import * as api from '../../common/api.js';
-    import {required, email} from 'vuelidate/lib/validators';
-    import ValidationAlert from "../common/ValidationAlert";
+    import {profileValidation, validationConfigs} from "../../common/validation";
     import ExpPanelHeader from "./ExpPanelHeader";
-
-    const notEmpty = (array) => array.length > 0;
+    import CatalogSetInput from "../common/CatalogSetInput";
+    import UserService from "../../services/UserService";
+    import ImageService from "../../services/ImageService";
 
     export default {
         name: "Profile",
         components: {
-            'validation-alert': ValidationAlert,
-            'exp-panel-header': ExpPanelHeader
+            'exp-panel-header': ExpPanelHeader,
+            'catalog-set-input': CatalogSetInput
         },
         data: () => ({
-            profile: {
-                id: null,
-                avatar: null,
-                email: "",
-                name: "",
-                phone: "",
-                city: "",
-                activePetsitter: false,
-                catalogSet: [],
+            profile: null,
+            errors: {
+                name: [],
+                phone: [],
+                city: [],
                 animals: [],
-                description: "",
-                rating: null,
-                feedback: []
+                catalogSet: []
             },
             file: [],
             validCities: []
         }),
+        mounted() {
+            this.profile = UserService.getProfileState;
+        },
         computed: {
             notNullCatalog() {
-                if (typeof this.profile.catalogSet !== 'undefined' && this.profile.catalogSet.length > 0) {
+                if (!!this.profile.catalogSet && this.profile.catalogSet.length > 0) {
                     return this.profile.catalogSet.filter(
-                        item => (item.petService != null && item.price != null)
+                        item => (!!item.petService && !!item.price)
                     )
                 } else {
                     return [];
                 }
             },
             feedbackCount() {
-                if (typeof this.profile.feedback !== 'undefined') {
+                if (this.profile.feedback) {
                     return this.profile.feedback.length;
                 } else {
                     return 0;
                 }
             },
             avatarLink() {
-                return (this.profile.avatar !== null) ?
-                    "http://localhost:8090/image/" + this.profile.avatar.id :
-                    require('@/assets/paw_icon.png');
+                return ImageService.avatarLink(this.profile ? this.profile.avatar : null)
             },
             cities() {
                 return this.$store.getters.cities
@@ -316,44 +311,93 @@
             units() {
                 return this.$store.getters.units
             },
-            buttonDisabled() {
-                return !this.$v.$anyDirty || this.$v.$anyError
-            },
             cityName() {
-                return (this.profile.city === undefined || this.profile.city == null) ? '' : this.profile.city.name
-            }
+                return (this.profile.city.name) ? this.profile.city.name : ''
+            },
+            showAlert() {
+                return this.errors.catalogSet > 0
+            },
         },
         methods: {
-            addService() {
-                this.profile.catalogSet.push({petService: {name: null}, price: null, units: null})
+            nameInput(value) {
+                profileValidation.inputName(this, value)
+            },
+            phoneInput(value) {
+                profileValidation.inputPhone(this, value)
+            },
+            cityInput(value) {
+                profileValidation.inputCity(this, value)
+            },
+            animalsInput(value) {
+                profileValidation.inputAnimals(this, value)
+            },
+            clearName() {
+                profileValidation.clearName(this)
+            },
+            clearPhone() {
+                profileValidation.clearPhone(this)
+            },
+            clearCity() {
+                profileValidation.clearCity(this)
+            },
+            clearAnimals() {
+                profileValidation.clearAnimals(this)
+            },
+            clearCatalogSet() {
+                profileValidation.clearCatalogSet(this)
+            },
+            catalogSetChange(value) {
+                this.profile.catalogSet = value
+                profileValidation.catalogSetChange(this)
             },
             saveChanges() {
-                if (!this.$v.$anyError) {
+                if (this.$v.$invalid) {
+                    profileValidation.validateForm(this)
+                } else {
                     this.profile.avatar = null;
-                    api.userController.put("", this.profile)
+                    this.profile.catalogSet = this.profile.catalogSet.filter(catalog => {
+                        return !!catalog.petService.name && !!catalog.price && !!catalog.units
+                    });
+
+                    UserService.setProfileState = this.profile;
+
+                    UserService.updateProfile(this.profile)
                         .then((response) => {
                             // eslint-disable-next-line no-console
-                            console.log(response.data)
+                            console.log('response on profile update')
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console
                             console.log(error)
-                        })
+                        });
                 }
             },
             nullSafetyError(obj) {
-                return (obj === undefined || obj === null) ? false : obj.$invalid && obj.$anyDirty
+                return (obj) ? obj.$invalid && obj.$anyDirty : false
+            },
+            nullSafetyValid(obj) {
+                return (obj) ? !obj.$invalid && obj.$anyDirty : false
+            },
+            nullSafetyValidCatalog(obj) {
+                return (obj) ? obj.$anyDirty && this.errors.catalogSet.length === 0 : false
             },
             uploadAvatar() {
-                if (this.file !== null) {
-                    const formData = new FormData();
-                    formData.append("file", this.file);
-
-                    api.imageController.post("/" + this.profile.id, formData)
+                if (this.file) {
+                    ImageService.upload(this.profile.id, this.file)
                         .then((response) => {
                             this.profile.avatar = response.data
                             // eslint-disable-next-line no-console
+                            console.log('response on image upload')
+                            // eslint-disable-next-line no-console
                             console.log(response.data)
+                            const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                            if (csrfToken){
+                                UserService.csrfToken = csrfToken
+                            }
                         })
                         .catch((error) => {
                             // eslint-disable-next-line no-console
@@ -362,57 +406,8 @@
                 }
             }
         },
-        mounted() {
-            this.profile = this.$store.getters.profile
-            // eslint-disable-next-line no-console
-            console.log("mounted profile")
-        },
         validations() {
-            if (!this.profile.activePetsitter) {
-                return {
-                    profile: {
-                        email: {
-                            required,
-                            email
-                        },
-                        name: {
-                            required
-                        },
-                        phone: {
-                            required
-                        },
-                        city: {
-                            required
-                        }
-                    }
-                }
-            } else {
-                return {
-                    profile: {
-                        email: {
-                            required,
-                            email
-                        },
-                        name: {
-                            required
-                        },
-                        phone: {
-                            required
-                        },
-                        city: {
-                            required,
-                        },
-                        animals: {
-                            required,
-                            notEmpty
-                        },
-                        catalogSet: {
-                            required,
-                            notEmpty
-                        }
-                    }
-                }
-            }
+            return validationConfigs.profile(this.profile.activePetsitter)
         }
     }
 </script>

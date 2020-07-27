@@ -1,4 +1,5 @@
-import * as api from "../common/api";
+import PetServiceService from "../services/PetServiceService";
+import UserService from "../services/UserService";
 
 export default {
     state: {
@@ -12,9 +13,13 @@ export default {
     actions: {
         initServices: async ({commit, getters}) => {
             if (getters.services.length === 0) {
-                await api.serviceController.get("/all")
+                await PetServiceService.fetchAll()
                     .then((response) => {
                         commit('SET_SERVICES', response.data)
+                        const csrfToken = response.config.headers[response.config.xsrfHeaderName];
+                        if (csrfToken){
+                            UserService.csrfToken = csrfToken
+                        }
                     })
                     .catch((error) => {
                         // eslint-disable-next-line no-console

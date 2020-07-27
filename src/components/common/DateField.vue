@@ -1,25 +1,26 @@
 <template>
-  <div>
-    <v-text-field
-        :value="value"
-        :label="label"
-        @click="showPicker=true"
-        :prepend-icon="icon"
-        class="pr-3"
-        readonly
-    ></v-text-field>
-    <v-date-picker
-        v-show="showPicker"
-        v-model="date"
-        locale="ru"
-        first-day-of-week="1"
-        @input="updateDate"
-        scrollable
-        :no-title="noTitle"
-        landscape
-    >
-    </v-date-picker>
-  </div>
+    <div>
+        <v-text-field
+                :value="value"
+                :label="label"
+                @click="showPicker=true"
+                :prepend-icon="icon"
+                :error-messages="errorMessages"
+                class="pr-3"
+                readonly
+        />
+        <v-date-picker
+                v-show="showPicker"
+                v-model="date"
+                locale="ru"
+                first-day-of-week="1"
+                @change="updateDate"
+                scrollable
+                :no-title="noTitle"
+                landscape
+        >
+        </v-date-picker>
+    </div>
 </template>
 
 <script>
@@ -29,6 +30,7 @@
             label: String,
             value: String,
             icon: String,
+            errors: Array,
             noTitle: {
                 type: Boolean,
                 default: false
@@ -46,10 +48,15 @@
             }
         },
         mounted() {
-            if (this.value !== undefined){
+            if (this.value) {
                 this.date = this.value
             }
-        }
+        },
+      computed: {
+          errorMessages(){
+            return (this.errors) ? this.errors : []
+          }
+      }
     }
 </script>
 
